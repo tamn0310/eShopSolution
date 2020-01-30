@@ -1,2 +1,3 @@
-# eShopSolution
-EShopSolution using .NET core 3.1
+#THIS IS PROJECT WITH .NET CORE 3.1
+- Coded by KaiKai
+##IS A PROJECT LEARNING
