@@ -6,11 +6,6 @@
     public class OrderDetail
     {
         /// <summary>
-        /// Id của chi tiết đơn hàng, tự tăng
-        /// </summary>
-        public int Id { get; set; }
-
-        /// <summary>
         /// map với bảng đơn hàng
         /// </summary>
         public int OrderId { get; set; }

@@ -26,5 +26,20 @@ namespace eShopSolution.Data.Entities
         /// map với bảng Funtion
         /// </summary>
         public int FunctionId { get; set; }
+
+        /// <summary>
+        /// Thông tin bảng role
+        /// </summary>
+        public AppRole AppRole { get; set; }
+
+        /// <summary>
+        /// Thông tin bảng action
+        /// </summary>
+        public Action Action { get; set; }
+
+        /// <summary>
+        /// thông tin bảng function
+        /// </summary>
+        public Function Function { get; set; }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace eShopSolution.Data.Entities
+﻿using System;
+
+namespace eShopSolution.Data.Entities
 {
     /// <summary>
     /// Hoạt động của hệ thống
@@ -13,12 +15,12 @@
         /// <summary>
         /// Tên hành động
         /// </summary>
-        public int ActionName { get; set; }
+        public string ActionName { get; set; }
 
         /// <summary>
         /// Ngày hành động
         /// </summary>
-        public int ActionDate { get; set; }
+        public DateTime ActionDate { get; set; }
 
         /// <summary>
         /// map với bảng chức năng
@@ -28,11 +30,11 @@
         /// <summary>
         /// map với thông tin người dùng
         /// </summary>
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
 
         /// <summary>
         /// Địa chỉ IP truy cập
         /// </summary>
-        public int ClientIP { get; set; }
+        public string ClientIP { get; set; }
     }
 }

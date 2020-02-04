@@ -10,7 +10,7 @@ namespace eShopSolution.Data.Entities
         /// <summary>
         /// Id của ngôn ngữ
         /// </summary>
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// Tên của ngôn ngữ
