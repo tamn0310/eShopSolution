@@ -10,7 +10,7 @@ namespace eShopSolution.Data.Configurations
         {
             builder.ToTable("AppConfigs");
             builder.HasKey(x => x.Key);
-            builder.Property(x => x.Value).HasMaxLength(30).IsRequired(true);
+            builder.Property(x => x.Value).HasMaxLength(100).IsRequired(true);
         }
     }
 }

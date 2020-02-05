@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace eShopSolution.Data.Migrations
 {
-    public partial class CreateDB : Migration
+    public partial class adddatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -25,7 +25,7 @@ namespace eShopSolution.Data.Migrations
                 columns: table => new
                 {
                     Key = table.Column<string>(nullable: false),
-                    Value = table.Column<string>(maxLength: 30, nullable: false)
+                    Value = table.Column<string>(maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -252,7 +252,7 @@ namespace eShopSolution.Data.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    OrderDate = table.Column<DateTime>(nullable: false, defaultValue: new DateTime(2020, 2, 5, 20, 53, 31, 293, DateTimeKind.Local).AddTicks(2184)),
+                    OrderDate = table.Column<DateTime>(nullable: false, defaultValue: new DateTime(2020, 2, 5, 21, 21, 38, 798, DateTimeKind.Local).AddTicks(8199)),
                     UserId = table.Column<Guid>(nullable: false),
                     ShipName = table.Column<string>(maxLength: 150, nullable: false),
                     ShipPhone = table.Column<string>(maxLength: 20, nullable: false),
@@ -470,6 +470,79 @@ namespace eShopSolution.Data.Migrations
                         principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "AppConfigs",
+                columns: new[] { "Key", "Value" },
+                values: new object[,]
+                {
+                    { "HomeTitle", "This is home page of eShopSolution" },
+                    { "HomeKeyword", "This is keyword of eShopSolution" },
+                    { "HomeDescription", "This is description of eShopSolution" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AppRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Description", "Name", "NormalizedName" },
+                values: new object[] { new Guid("8d04dce2-969a-435d-bba4-df3f325983dc"), "a708cf16-1cbd-429e-9d74-c5ceeaea8b7d", "Administrator role", "admin", "admin" });
+
+            migrationBuilder.InsertData(
+                table: "AppUserRoles",
+                columns: new[] { "UserId", "RoleId" },
+                values: new object[] { new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"), new Guid("8d04dce2-969a-435d-bba4-df3f325983dc") });
+
+            migrationBuilder.InsertData(
+                table: "AppUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Dob", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"), 0, "c66e54a5-f798-4667-882b-5a0356ef860f", new DateTime(1998, 10, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), "tamn0310@gmail.com", true, "Nguyễn", "Tâm", false, null, "tamn0310@gmail.com", "tamn0310", "AQAAAAEAACcQAAAAEBt/stvgzoTIG/RTlyz2vBTH+f9sU6ed1Dj+oMKM7ViSFkwGeYKiXRN88fR0u2m0OQ==", null, false, "", false, "tamn0310" });
+
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "Id", "IsShowHome", "ParentId", "SortOrder", "Status" },
+                values: new object[,]
+                {
+                    { 1, true, null, 1, 1 },
+                    { 2, true, null, 2, 1 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Languages",
+                columns: new[] { "Id", "IsDefaults", "Name" },
+                values: new object[,]
+                {
+                    { "vi-VN", true, "Tiếng Việt" },
+                    { "en-US", false, "English" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Products",
+                columns: new[] { "Id", "DateCreated", "OriginalPrice", "Price" },
+                values: new object[] { 1, new DateTime(2020, 2, 5, 21, 21, 38, 830, DateTimeKind.Local).AddTicks(3976), 100000m, 200000m });
+
+            migrationBuilder.InsertData(
+                table: "CategoryTranslations",
+                columns: new[] { "Id", "CategoryId", "LanguageId", "Name", "SeoAlias", "SeoDescription", "SeoTitle" },
+                values: new object[,]
+                {
+                    { 1, 1, "vi-VN", "Áo nam", "ao-nam", "Sản phẩm áo thời trang nam", "Sản phẩm áo thời trang nam" },
+                    { 3, 2, "vi-VN", "Áo nữ", "ao-nu", "Sản phẩm áo thời trang nữ", "Sản phẩm áo thời trang women" },
+                    { 2, 1, "en-US", "Men Shirt", "men-shirt", "The shirt products for men", "The shirt products for men" },
+                    { 4, 2, "en-US", "Women Shirt", "women-shirt", "The shirt products for women", "The shirt products for women" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "ProductInCategories",
+                columns: new[] { "CategoryId", "ProductId" },
+                values: new object[] { 1, 1 });
+
+            migrationBuilder.InsertData(
+                table: "ProductTranslations",
+                columns: new[] { "Id", "Description", "Details", "LanguageId", "Name", "ProductId", "SeoAlias", "SeoDescription", "SeoTitle" },
+                values: new object[,]
+                {
+                    { 1, "Áo sơ mi nam trắng Việt Tiến", "Áo sơ mi nam trắng Việt Tiến", "vi-VN", "Áo sơ mi nam trắng Việt Tiến", 1, "ao-so-mi-nam-trang-viet-tien", "Áo sơ mi nam trắng Việt Tiến", "Áo sơ mi nam trắng Việt Tiến" },
+                    { 2, "Viet Tien Men T-Shirt", "Viet Tien Men T-Shirt", "en-US", "Viet Tien Men T-Shirt", 1, "viet-tien-men-t-shirt", "Viet Tien Men T-Shirt", "Viet Tien Men T-Shirt" }
                 });
 
             migrationBuilder.CreateIndex(
