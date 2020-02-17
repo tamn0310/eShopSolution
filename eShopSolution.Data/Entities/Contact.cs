@@ -5,7 +5,7 @@ namespace eShopSolution.Data.Entities
     /// <summary>
     /// Liên hệ
     /// </summary>
-    public class Contact
+    public class Contact : BaseEntities
     {
         /// <summary>
         /// Id tự tăng

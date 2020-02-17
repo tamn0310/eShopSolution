@@ -5,7 +5,7 @@ namespace eShopSolution.Data.Entities
     /// <summary>
     /// Bảng giỏ hàng
     /// </summary>
-    public class Cart
+    public class Cart : BaseEntities
     {
         /// <summary>
         /// Id của giỏ hàng, tự tăng
@@ -30,17 +30,16 @@ namespace eShopSolution.Data.Entities
         /// <summary>
         /// map với id của người dùng
         /// </summary>
-
         public Guid UserId { get; set; }
+
         /// <summary>
         /// map với bảng sản phẩm
         /// </summary>
-
         public Product Product { get; set; }
+
         /// <summary>
         /// Ngày cho hàng vảo giỏ
         /// </summary>
-
         public DateTime DateCreated { get; set; }
 
         /// <summary>

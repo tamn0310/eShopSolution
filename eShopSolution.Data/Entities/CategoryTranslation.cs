@@ -3,7 +3,7 @@
     /// <summary>
     /// Danh mục đa ngôn ngữ
     /// </summary>
-    public class CategoryTranslation
+    public class CategoryTranslation : BaseEntities
     {
         /// <summary>
         /// Id tự tăng

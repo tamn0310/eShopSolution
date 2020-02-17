@@ -6,7 +6,7 @@ namespace eShopSolution.Data.Entities
     /// <summary>
     /// Bảng thể hiện các hành động
     /// </summary>
-    public class Action
+    public class Action : BaseEntities
     {
         /// <summary>
         /// Id tự tăng

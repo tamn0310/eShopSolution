@@ -6,7 +6,7 @@ namespace eShopSolution.Data.Entities
     /// <summary>
     /// Bảng giao dịch
     /// </summary>
-    public class Transaction
+    public class Transaction : BaseEntities
     {
         /// <summary>
         /// Id giao dịch, tự tăng

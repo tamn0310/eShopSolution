@@ -4,4 +4,9 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Reponsitories\Implements\" />
+    <Folder Include="Reponsitories\Interfaces\" />
+  </ItemGroup>
+
 </Project>

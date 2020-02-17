@@ -6,7 +6,7 @@ namespace eShopSolution.Data.Entities
     /// <summary>
     /// Sản phẩm
     /// </summary>
-    public class Product
+    public class Product : BaseEntities
     {
         /// <summary>
         /// Id của sản phẩm, tự tăng

@@ -5,7 +5,7 @@ namespace eShopSolution.Data.Entities
     /// <summary>
     /// Bảng đa ngôn ngữ
     /// </summary>
-    public class Language
+    public class Language : BaseEntities
     {
         /// <summary>
         /// Id của ngôn ngữ
