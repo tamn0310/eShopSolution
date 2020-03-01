@@ -34,11 +34,6 @@ namespace eShopSolution.Data.Entities
         public int ViewCount { get; set; }
 
         /// <summary>
-        /// Ngày tạo sản phẩm
-        /// </summary>
-        public DateTime DateCreated { get; set; }
-
-        /// <summary>
         /// Quan hệ giữa sản phẩm và danh mục, một sản phẩm có nhiều danh mục
         /// </summary>
         public List<ProductInCategory> ProductInCategories { get; set; }
