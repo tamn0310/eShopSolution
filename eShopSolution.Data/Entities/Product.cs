@@ -52,5 +52,10 @@ namespace eShopSolution.Data.Entities
         /// Quan hệ với bảng sản phẩm phiên dịch, một thông tin sản phẩm sẽ có nhiều ngôn ngữ
         /// </summary>
         public List<ProductTranslation> ProductTranslations { get; set; }
+
+        /// <summary>
+        /// Quan hệ với bảng ProductImage, một sản phẩm có nhiều ảnh
+        /// </summary>
+        public List<ProductImage> ProductImages { get; set; }
     }
 }

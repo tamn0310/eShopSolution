@@ -13,7 +13,7 @@
         /// <summary>
         /// Giá gốc
         /// </summary>
-        public decimal OriginalPrice { set; get; }\
+        public decimal OriginalPrice { set; get; }
 
         /// <summary>
         /// Tình trạng
