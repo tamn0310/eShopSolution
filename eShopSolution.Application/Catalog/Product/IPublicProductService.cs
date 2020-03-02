@@ -1,5 +1,5 @@
 ﻿using eShopSolution.Application.Catalog.Product.Dtos;
-using eShopSolution.Application.Catalog.Product.Dtos.Manage;
+using eShopSolution.Application.Catalog.Product.Dtos.Public;
 using eShopSolution.Application.DtosCommon;
 using System.Threading.Tasks;
 

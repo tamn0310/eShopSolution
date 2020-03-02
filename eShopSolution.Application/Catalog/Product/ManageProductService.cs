@@ -133,19 +133,65 @@ namespace eShopSolution.Application.Catalog.Product
             return pageResult;
         }
 
-        public Task<int> Update(ProductUpdateRequest request)
+        /// <summary>
+        /// Cập nhật thông tin sản phẩm
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public async Task<int> Update(ProductUpdateRequest request)
         {
-            throw new NotImplementedException();
+            var product = await this._eShopDbContext.Products.FindAsync(request.Id);
+            var productTranslation = await this._eShopDbContext.ProductTranslations.FirstOrDefaultAsync(x => x.ProductId == request.Id && x.LanguageId == request.LanguageId);
+            if (product == null || productTranslation == null)
+            {
+                throw new EShopException($"Cannot find a product with id {request.Id}");
+            }
+
+            productTranslation.Name = request.Name;
+            productTranslation.Details = request.Details;
+            productTranslation.Description = request.Description;
+            productTranslation.SeoAlias = request.SeoAlias;
+            productTranslation.SeoDescription = request.SeoDescription;
+            productTranslation.SeoTitle = request.SeoTitle;
+
+            return await this._eShopDbContext.SaveChangesAsync();
         }
 
-        public Task<bool> UpdatePrice(int productId, decimal newPrice)
+        /// <summary>
+        /// Cập nhật giá tiền sản phẩm
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <param name="newPrice"></param>
+        /// <returns></returns>
+        public async Task<bool> UpdatePrice(int productId, decimal newPrice)
         {
-            throw new NotImplementedException();
+            var product = await this._eShopDbContext.Products.FindAsync(productId);
+            if (product == null)
+            {
+                throw new EShopException($"Cannot find a product with id {productId}");
+            }
+
+            product.UpdatedDate = DateTime.Now;
+            product.Price = newPrice;
+            return await this._eShopDbContext.SaveChangesAsync() > 0; // return > 0 => true, return < 0 => false
         }
 
-        public Task<bool> UpdateStock(int productId, int addedQuantity)
+        /// <summary>
+        /// Cập nhật lại số lượng sản phẩm
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <param name="addedQuantity"></param>
+        /// <returns></returns>
+        public async Task<bool> UpdateStock(int productId, int addedQuantity)
         {
-            throw new NotImplementedException();
+            var product = await this._eShopDbContext.Products.FindAsync(productId);
+            if (product == null)
+            {
+                throw new EShopException($"Cannot find a product with id {productId}");
+            }
+            product.UpdatedDate = DateTime.Now;
+            product.Stock += addedQuantity;
+            return await this._eShopDbContext.SaveChangesAsync() > 0;
         }
     }
 }
