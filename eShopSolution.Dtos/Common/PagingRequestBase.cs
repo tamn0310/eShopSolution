@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace eShopSolution.Application.DtosCommon
+﻿namespace eShopSolution.Dtos.Common
 {
     /// <summary>
     /// phân trang
     /// </summary>
-   public class PagingRequestBase
+    public class PagingRequestBase
     {
         /// <summary>
         /// Trang đầu

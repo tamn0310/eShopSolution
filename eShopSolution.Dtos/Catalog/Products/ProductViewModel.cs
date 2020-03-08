@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace eShopSolution.Application.Catalog.Product.Dtos
+namespace eShopSolution.Dtos.Catalog.Products
 {
     /// <summary>
     /// Dto: sản phẩm

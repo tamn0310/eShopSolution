@@ -1,13 +1,17 @@
-﻿using eShopSolution.Application.Catalog.Product.Dtos;
-using eShopSolution.Application.Catalog.Product.Dtos.Manage;
-using eShopSolution.Application.DtosCommon;
+﻿using eShopSolution.Application.Common;
 using eShopSolution.Data.EF;
 using eShopSolution.Data.Entities;
+using eShopSolution.Dtos.Catalog.Products;
+using eShopSolution.Dtos.Catalog.Products.Manage;
+using eShopSolution.Dtos.Common;
 using eShopSolution.Utilities.ExceptionCommon;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace eShopSolution.Application.Catalog.Product
@@ -15,10 +19,17 @@ namespace eShopSolution.Application.Catalog.Product
     public class ManageProductService : IManageProductService
     {
         private readonly EShopDbContext _eShopDbContext;
+        private readonly IStorageService _storageService;
 
-        public ManageProductService(EShopDbContext eShopDbContext)
+        public ManageProductService(EShopDbContext eShopDbContext, IStorageService storageService)
         {
             this._eShopDbContext = eShopDbContext;
+            this._storageService = storageService;
+        }
+
+        public Task<int> AddImgae(int productId, List<IFormFile> files)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -62,6 +73,24 @@ namespace eShopSolution.Application.Catalog.Product
                     }
                 }
             };
+
+            // Save Images
+            if (request.ThumbnailImage != null)
+            {
+                product.ProductImages = new List<ProductImage>()
+                {
+                    new ProductImage()
+                    {
+                        Alt = "Thumbnail image",
+                        CreatedDate = DateTime.Now,
+                        FileSize = request.ThumbnailImage.Length,
+                        Url = await this.SaveFile(request.ThumbnailImage),
+                        IsDefault = true,
+                        SortOrder = 1
+                    }
+                };
+            }
+
             _eShopDbContext.Products.Add(product);
             return await _eShopDbContext.SaveChangesAsync();
         }
@@ -78,6 +107,13 @@ namespace eShopSolution.Application.Catalog.Product
             {
                 throw new EShopException($"Cannot find a product with productId {productId}");
             }
+
+            var images = _eShopDbContext.ProductImages.Where(x => x.ProductId == productId);
+            foreach (var image in images)
+            {
+                await _storageService.DeleteFileAsync(image.Url);
+            }
+
             _eShopDbContext.Products.Remove(product);
             return await _eShopDbContext.SaveChangesAsync();
         }
@@ -133,6 +169,11 @@ namespace eShopSolution.Application.Catalog.Product
             return pageResult;
         }
 
+        public Task<int> RemoveImage(int imageId)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Cập nhật thông tin sản phẩm
         /// </summary>
@@ -154,7 +195,25 @@ namespace eShopSolution.Application.Catalog.Product
             productTranslation.SeoDescription = request.SeoDescription;
             productTranslation.SeoTitle = request.SeoTitle;
 
+            // Update Image
+            if (request.ThumbnailImage != null)
+            {
+                var thumbnailImage = await _eShopDbContext.ProductImages.FirstOrDefaultAsync(i => i.IsDefault == true && i.ProductId == request.Id);
+                if (thumbnailImage != null)
+                {
+                    thumbnailImage.FileSize = request.ThumbnailImage.Length;
+                    thumbnailImage.Url = await this.SaveFile(request.ThumbnailImage);
+                    thumbnailImage.UpdatedDate = DateTime.Now;
+                    _eShopDbContext.ProductImages.Update(thumbnailImage);
+                }
+            }
+
             return await this._eShopDbContext.SaveChangesAsync();
+        }
+
+        public Task<int> UpdateImage(int imageId, string Alt, bool IsDefault)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -192,6 +251,14 @@ namespace eShopSolution.Application.Catalog.Product
             product.UpdatedDate = DateTime.Now;
             product.Stock += addedQuantity;
             return await this._eShopDbContext.SaveChangesAsync() > 0;
+        }
+
+        private async Task<string> SaveFile(IFormFile file)
+        {
+            var originalFileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName;
+            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(originalFileName)}";
+            await _storageService.SaveFileAsync(file.OpenReadStream(), fileName);
+            return fileName;
         }
     }
 }

@@ -38,7 +38,7 @@
         /// <summary>
         /// Kích thước ảnh
         /// </summary>
-        public int FileSize { get; set; }
+        public long FileSize { get; set; }
 
         /// <summary>
         /// Map thông tin bảng sản phẩm

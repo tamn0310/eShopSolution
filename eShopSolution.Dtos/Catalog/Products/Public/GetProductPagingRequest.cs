@@ -1,6 +1,6 @@
-﻿using eShopSolution.Application.DtosCommon;
+﻿using eShopSolution.Dtos.Common;
 
-namespace eShopSolution.Application.Catalog.Product.Dtos.Public
+namespace eShopSolution.Dtos.Catalog.Products.Public
 {
     /// <summary>
     /// Lấy danh sách sản phẩm, phân trang base - public

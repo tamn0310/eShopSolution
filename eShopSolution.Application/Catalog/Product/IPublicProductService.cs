@@ -1,6 +1,6 @@
-﻿using eShopSolution.Application.Catalog.Product.Dtos;
-using eShopSolution.Application.Catalog.Product.Dtos.Public;
-using eShopSolution.Application.DtosCommon;
+﻿using eShopSolution.Dtos.Catalog.Products;
+using eShopSolution.Dtos.Catalog.Products.Public;
+using eShopSolution.Dtos.Common;
 using System.Threading.Tasks;
 
 namespace eShopSolution.Application.Catalog.Product

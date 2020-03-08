@@ -1,4 +1,6 @@
-﻿namespace eShopSolution.Application.Catalog.Product.Dtos.Manage
+﻿using Microsoft.AspNetCore.Http;
+
+namespace eShopSolution.Dtos.Catalog.Products.Manage
 {
     /// <summary>
     /// Yêu cầu tạo mới sản phẩm - admin
@@ -54,5 +56,10 @@
         /// Map thông tin ngôn ngữ
         /// </summary>
         public string LanguageId { set; get; }
+
+        /// <summary>
+        /// Image for product - create
+        /// </summary>
+        public IFormFile ThumbnailImage { get; set; }
     }
 }

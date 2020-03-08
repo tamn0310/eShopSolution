@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace eShopSolution.Application.DtosCommon
+namespace eShopSolution.Dtos.Common
 {
     /// <summary>
     /// Trả về kết quả số trang và số bản ghi của 1 request

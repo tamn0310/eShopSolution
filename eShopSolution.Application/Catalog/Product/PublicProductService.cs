@@ -1,7 +1,7 @@
-﻿using eShopSolution.Application.Catalog.Product.Dtos;
-using eShopSolution.Application.Catalog.Product.Dtos.Public;
-using eShopSolution.Application.DtosCommon;
-using eShopSolution.Data.EF;
+﻿using eShopSolution.Data.EF;
+using eShopSolution.Dtos.Catalog.Products;
+using eShopSolution.Dtos.Catalog.Products.Public;
+using eShopSolution.Dtos.Common;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;

@@ -1,6 +1,8 @@
-﻿using eShopSolution.Application.Catalog.Product.Dtos;
-using eShopSolution.Application.Catalog.Product.Dtos.Manage;
-using eShopSolution.Application.DtosCommon;
+﻿using eShopSolution.Dtos.Catalog.Products;
+using eShopSolution.Dtos.Catalog.Products.Manage;
+using eShopSolution.Dtos.Common;
+using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace eShopSolution.Application.Catalog.Product
@@ -60,5 +62,29 @@ namespace eShopSolution.Application.Catalog.Product
         /// <param name="request"></param>
         /// <returns></returns>
         Task<PagedResult<ProductViewModel>> GetAllPaging(GetProductPagingRequest request);
+
+        /// <summary>
+        /// Thêm ảnh cho sản phẩm
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <param name="files"></param>
+        /// <returns></returns>
+        Task<int> AddImgae(int productId, List<IFormFile> files);
+
+        /// <summary>
+        /// Xóa ảnh của sản phẩm
+        /// </summary>
+        /// <param name="imageId"></param>
+        /// <returns></returns>
+        Task<int> RemoveImage(int imageId);
+
+        /// <summary>
+        /// Cập nhật lại ảnh cho sản phẩm
+        /// </summary>
+        /// <param name="imageId"></param>
+        /// <param name="Alt"></param>
+        /// <param name="IsDefault"></param>
+        /// <returns></returns>
+        Task<int> UpdateImage(int imageId, string Alt, bool IsDefault);
     }
 }
