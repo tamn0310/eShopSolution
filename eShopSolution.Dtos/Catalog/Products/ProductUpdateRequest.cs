@@ -1,64 +1,54 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace eShopSolution.Dtos.Catalog.Products.Manage
+namespace eShopSolution.Dtos.Catalog.Products
 {
     /// <summary>
-    /// Yêu cầu tạo mới sản phẩm - admin
+    /// Yêu cầu cập nhật sản phẩm - admin
     /// </summary>
-    public class ProductCreateRequest
+    public class ProductUpdateRequest
     {
         /// <summary>
-        /// Giá bán
+        /// Id sản phẩm, cập nhật
         /// </summary>
-        public decimal Price { set; get; }
+        public int Id { get; set; }
 
         /// <summary>
-        /// Giá gốc
-        /// </summary>
-        public decimal OriginalPrice { set; get; }
-
-        /// <summary>
-        /// Tình trạng
-        /// </summary>
-        public int Stock { set; get; }
-
-        /// <summary>
-        /// Tên sản phẩm
+        /// Tên sản phẩm, cập nhật
         /// </summary>
         public string Name { set; get; }
 
         /// <summary>
-        /// Mô tả sản phẩm
+        /// Mô tả sản phầm, cập nhật
         /// </summary>
         public string Description { set; get; }
 
         /// <summary>
-        /// Thông tin chi tiết sản phẩm
+        /// Chi tiết sản phẩm, cập nhật
         /// </summary>
         public string Details { set; get; }
 
         /// <summary>
-        /// Mô tả seo
+        /// Mô tả seo, cập nhật
         /// </summary>
         public string SeoDescription { set; get; }
 
         /// <summary>
-        /// Tiêu đề seo
+        /// Tiêu đề seo, cập nhật
         /// </summary>
         public string SeoTitle { set; get; }
 
         /// <summary>
-        /// Seo alias
+        /// seo alias, cập nhật
         /// </summary>
         public string SeoAlias { get; set; }
 
         /// <summary>
-        /// Map thông tin ngôn ngữ
+        /// Map thông tin ngôn ngữ, cập nhật
         /// </summary>
         public string LanguageId { set; get; }
 
         /// <summary>
-        /// Image for product - create
+        /// Image for product - update
         /// </summary>
         public IFormFile ThumbnailImage { get; set; }
     }

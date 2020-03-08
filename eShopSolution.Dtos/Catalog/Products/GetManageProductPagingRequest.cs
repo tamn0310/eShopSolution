@@ -6,7 +6,7 @@ namespace eShopSolution.Dtos.Catalog.Products.Manage
     /// <summary>
     /// Lấy danh sách sản phẩm, phân tranng - admin
     /// </summary>
-    public class GetProductPagingRequest : PagingRequestBase
+    public class GetManageProductPagingRequest : PagingRequestBase
     {
         /// <summary>
         /// Từ khóa

@@ -61,7 +61,7 @@ namespace eShopSolution.Application.Catalog.Product
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        Task<PagedResult<ProductViewModel>> GetAllPaging(GetProductPagingRequest request);
+        Task<PagedResult<ProductViewModel>> GetAllPaging(GetManageProductPagingRequest request);
 
         /// <summary>
         /// Thêm ảnh cho sản phẩm

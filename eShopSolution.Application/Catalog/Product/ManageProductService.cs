@@ -118,7 +118,7 @@ namespace eShopSolution.Application.Catalog.Product
             return await _eShopDbContext.SaveChangesAsync();
         }
 
-        public async Task<PagedResult<ProductViewModel>> GetAllPaging(GetProductPagingRequest request)
+        public async Task<PagedResult<ProductViewModel>> GetAllPaging(GetManageProductPagingRequest request)
         {
             /*Select join data*/
             var query = from p in _eShopDbContext.Products

@@ -3,6 +3,7 @@ using eShopSolution.Dtos.Catalog.Products;
 using eShopSolution.Dtos.Catalog.Products.Public;
 using eShopSolution.Dtos.Common;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,11 +19,41 @@ namespace eShopSolution.Application.Catalog.Product
         }
 
         /// <summary>
+        /// Lấy ra tất cả sản phẩm
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<ProductViewModel>> GetAll()
+        {
+            var query = from p in _eShopDbContext.Products
+                        join pt in _eShopDbContext.ProductTranslations on p.Id equals pt.ProductId
+                        join pic in _eShopDbContext.ProductInCategories on p.Id equals pic.ProductId
+                        join c in _eShopDbContext.Categories on pic.CategoryId equals c.Id
+                        select new { p, pt, pic };
+            var data = await query
+                .Select(x => new ProductViewModel()
+                {
+                    Id = x.p.Id,
+                    Name = x.pt.Name,
+                    DateCreated = x.p.CreatedDate,
+                    Description = x.pt.Description,
+                    Details = x.pt.Details,
+                    LanguageId = x.pt.LanguageId,
+                    SeoDescription = x.pt.SeoDescription,
+                    SeoAlias = x.pt.SeoAlias,
+                    SeoTitle = x.pt.SeoTitle,
+                    ViewCount = x.p.ViewCount
+                }).ToListAsync();
+
+            return data;
+
+        }
+
+        /// <summary>
         /// Lấy tất cả sản phẩm theo danh mục sản phẩm
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<PagedResult<ProductViewModel>> GetAllByCategoryId(GetProductPagingRequest request)
+        public async Task<PagedResult<ProductViewModel>> GetAllByCategoryId(GetPublicProductPagingRequest request)
         {
             /*Select join data*/
             var query = from p in _eShopDbContext.Products
