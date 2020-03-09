@@ -11,7 +11,7 @@ namespace eShopSolution.Data.Configurations
         {
             builder.ToTable("Functions");
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.Id).ValueGeneratedOnAdd();
+            builder.Property(x => x.Id).UseIdentityColumn();
             builder.Property(x => x.Name).IsRequired(true).HasMaxLength(100);
             builder.Property(x => x.Url).HasMaxLength(150);
             builder.Property(x => x.Status).HasDefaultValue(Status.Active);

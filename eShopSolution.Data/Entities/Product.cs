@@ -6,7 +6,7 @@ namespace eShopSolution.Data.Entities
     /// <summary>
     /// Sản phẩm
     /// </summary>
-    public class Product
+    public class Product : BaseEntities
     {
         /// <summary>
         /// Id của sản phẩm, tự tăng
@@ -34,11 +34,6 @@ namespace eShopSolution.Data.Entities
         public int ViewCount { get; set; }
 
         /// <summary>
-        /// Ngày tạo sản phẩm
-        /// </summary>
-        public DateTime DateCreated { get; set; }
-
-        /// <summary>
         /// Quan hệ giữa sản phẩm và danh mục, một sản phẩm có nhiều danh mục
         /// </summary>
         public List<ProductInCategory> ProductInCategories { get; set; }
@@ -57,5 +52,10 @@ namespace eShopSolution.Data.Entities
         /// Quan hệ với bảng sản phẩm phiên dịch, một thông tin sản phẩm sẽ có nhiều ngôn ngữ
         /// </summary>
         public List<ProductTranslation> ProductTranslations { get; set; }
+
+        /// <summary>
+        /// Quan hệ với bảng ProductImage, một sản phẩm có nhiều ảnh
+        /// </summary>
+        public List<ProductImage> ProductImages { get; set; }
     }
 }

@@ -10,7 +10,7 @@ namespace eShopSolution.Data.Configurations
         {
             builder.ToTable("Permissions");
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.Id).ValueGeneratedOnAdd();
+            builder.Property(x => x.Id).UseIdentityColumn();
             builder.HasOne(x => x.AppRole).WithMany(x => x.Permission).HasForeignKey(x => x.RodeId);
             builder.HasOne(x => x.Function).WithMany(x => x.Permission).HasForeignKey(x => x.FunctionId);
             builder.HasOne(x => x.Action).WithMany(x => x.Permission).HasForeignKey(x => x.ActionId);

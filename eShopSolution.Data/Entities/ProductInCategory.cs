@@ -3,7 +3,7 @@
     /// <summary>
     /// Quan hệ giữa sản phẩm và danh mục
     /// </summary>
-    public class ProductInCategory
+    public class ProductInCategory : BaseEntities
     {
         /// <summary>
         /// map với bảng sản phẩm

@@ -10,7 +10,7 @@ namespace eShopSolution.Data.Configurations
         {
             builder.ToTable("CategoryTranslations");
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.Id).ValueGeneratedOnAdd();
+            builder.Property(x => x.Id).UseIdentityColumn();
             builder.Property(x => x.Name).HasMaxLength(150).IsRequired(true);
             builder.Property(x => x.SeoAlias).HasMaxLength(150).IsRequired(true);
             builder.Property(x => x.SeoDescription).HasMaxLength(500);

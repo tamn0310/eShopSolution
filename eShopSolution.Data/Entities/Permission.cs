@@ -5,7 +5,7 @@ namespace eShopSolution.Data.Entities
     /// <summary>
     /// Bảng quyền
     /// </summary>
-    public class Permission
+    public class Permission : BaseEntities
     {
         /// <summary>
         /// Id tự tăng

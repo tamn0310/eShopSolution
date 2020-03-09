@@ -54,7 +54,7 @@ namespace eShopSolution.Data.SeedData
                new Product()
                {
                    Id = 1,
-                   DateCreated = DateTime.Now,
+                   CreatedDate = DateTime.Now,
                    OriginalPrice = 100000,
                    Price = 200000,
                    Stock = 0,

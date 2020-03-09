@@ -3,7 +3,7 @@
     /// <summary>
     /// sản phẩm đa ngôn ngữ
     /// </summary>
-    public class ProductTranslation
+    public class ProductTranslation : BaseEntities
     {
         /// <summary>
         /// Id tự tăng

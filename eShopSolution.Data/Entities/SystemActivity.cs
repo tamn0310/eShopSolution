@@ -5,7 +5,7 @@ namespace eShopSolution.Data.Entities
     /// <summary>
     /// Hoạt động của hệ thống
     /// </summary>
-    public class SystemActivity
+    public class SystemActivity : BaseEntities
     {
         /// <summary>
         /// Id tự tăng

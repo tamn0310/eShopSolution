@@ -6,7 +6,7 @@ namespace eShopSolution.Data.Entities
     /// <summary>
     /// Bảng chức năng
     /// </summary>
-    public class Function
+    public class Function : BaseEntities
     {
         /// <summary>
         /// Id tự tăng

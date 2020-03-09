@@ -6,7 +6,7 @@ namespace eShopSolution.Data.Entities
     /// <summary>
     /// Bảng khuyến mãi của shop
     /// </summary>
-    public class Promotion
+    public class Promotion : BaseEntities
     {
         /// <summary>
         /// Id tự tăng

@@ -10,7 +10,7 @@ namespace eShopSolution.Data.Configurations
         {
             builder.ToTable("Contacts");
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.Id).ValueGeneratedOnAdd();
+            builder.Property(x => x.Id).UseIdentityColumn();
             builder.Property(x => x.Name).HasMaxLength(150).IsRequired(true);
             builder.Property(x => x.Email).HasMaxLength(70).IsRequired(true);
             builder.Property(x => x.PhoneNumber).HasMaxLength(30).IsRequired(true);

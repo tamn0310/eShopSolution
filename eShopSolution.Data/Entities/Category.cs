@@ -6,7 +6,7 @@ namespace eShopSolution.Data.Entities
     /// <summary>
     /// Bảng danh mục sản phẩm
     /// </summary>
-    public class Category
+    public class Category : BaseEntities
     {
         /// <summary>
         /// Id của danh mục, tự tăng

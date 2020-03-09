@@ -3,7 +3,7 @@
     /// <summary>
     /// Bảng cấu hình
     /// </summary>
-    public class AppConfig
+    public class AppConfig : BaseEntities
     {
         /// <summary>
         /// Key
