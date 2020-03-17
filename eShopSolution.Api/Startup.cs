@@ -1,5 +1,7 @@
 using eShopSolution.Api.SwaggerOptions;
+using eShopSolution.Application.Catalog.Category;
 using eShopSolution.Application.Catalog.Product;
+using eShopSolution.Application.Common;
 using eShopSolution.Data.EF;
 using eShopSolution.Utilities.Contants;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -10,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
@@ -40,8 +43,43 @@ namespace eShopSolution.Api
 
             // add transient
             services.AddTransient<IPublicProductService, PublicProductService>();
+            services.AddTransient<IManageProductService, ManageProductService>();
+            services.AddTransient<IStorageService, FileStorageService>();
+            services.AddTransient<ICategoryService, CategoryService>();
 
-            services.AddControllers();
+            services.AddControllers(options =>
+            {
+                options.RespectBrowserAcceptHeader = true; // false by default
+            })
+             .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+             .ConfigureApiBehaviorOptions(options =>
+             {
+                 // Disable automatic 400 response: true
+                 options.SuppressModelStateInvalidFilter = true;
+             });
+
+            services.AddMvc();
+
+            services.AddOptions();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(
+                    "AllowAllOrigins",
+                    builder =>
+                    {
+                        builder
+                            .AllowAnyOrigin()
+                            .AllowAnyHeader()
+                            .WithExposedHeaders("Content-Disposition", "Api-Supported-Versions")
+                            .AllowAnyMethod();
+                    });
+            });
+
+            services.AddAntiforgery(options => options.HeaderName = "X-XSRF-TOKEN");
+            services.AddRouting(options => options.LowercaseUrls = true);
+
+            services.AddSingleton<IConfiguration>(this.Configuration);
 
             //api versioning
             services.AddApiVersioning(
@@ -109,6 +147,13 @@ namespace eShopSolution.Api
             }
 
             app.UseHttpsRedirection();
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")),
+                RequestPath = "/wwwroot"
+            });
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();

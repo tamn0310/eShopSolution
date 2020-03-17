@@ -1,5 +1,4 @@
 ﻿using eShopSolution.Dtos.Catalog.Products;
-using eShopSolution.Dtos.Catalog.Products.Public;
 using eShopSolution.Dtos.Common;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -18,7 +17,8 @@ namespace eShopSolution.Application.Catalog.Product
         /// <summary>
         /// Lấy ra tất cả sản phẩm
         /// </summary>
+        /// <param name="languageId"></param>
         /// <returns></returns>
-        Task<List<ProductViewModel>> GetAll();
+        Task<List<ProductViewModel>> GetAll(string languageId);
     }
 }

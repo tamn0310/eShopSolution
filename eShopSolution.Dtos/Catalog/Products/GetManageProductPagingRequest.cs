@@ -1,7 +1,7 @@
 ﻿using eShopSolution.Dtos.Common;
 using System.Collections.Generic;
 
-namespace eShopSolution.Dtos.Catalog.Products.Manage
+namespace eShopSolution.Dtos.Catalog.Products
 {
     /// <summary>
     /// Lấy danh sách sản phẩm, phân tranng - admin

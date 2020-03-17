@@ -1,5 +1,4 @@
 ﻿using eShopSolution.Dtos.Catalog.Products;
-using eShopSolution.Dtos.Catalog.Products.Manage;
 using eShopSolution.Dtos.Common;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
@@ -34,12 +33,20 @@ namespace eShopSolution.Application.Catalog.Product
         Task<int> Delete(int productId);
 
         /// <summary>
+        /// Lấy ra sản phẩm thông qua id tương ứng
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <param name="languageId"></param>
+        /// <returns></returns>
+        Task<ProductViewModel> GetById(int productId, string languageId);
+
+        /// <summary>
         /// Cập nhật giá tiền cho sản phẩm
         /// </summary>
         /// <param name="productId"></param>
         /// <param name="newPrice"></param>
         /// <returns>Trả về true false</returns>
-        Task<bool> UpdatePrice(int productId, decimal newPrice);
+        Task<bool> UpdatePrice(UpdateProductPriceCommand command);
 
         /// <summary>
         /// Cập nhật số lượng sản phẩm
@@ -47,7 +54,7 @@ namespace eShopSolution.Application.Catalog.Product
         /// <param name="productId"></param>
         /// <param name="addedQuantity"></param>
         /// <returns>Trả về true false</returns>
-        Task<bool> UpdateStock(int productId, int addedQuantity);
+        Task<bool> UpdateStock(UpdateStockProductCommand command);
 
         /// <summary>
         /// Method add lượt xem
