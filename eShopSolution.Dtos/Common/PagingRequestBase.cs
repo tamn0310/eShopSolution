@@ -8,11 +8,11 @@
         /// <summary>
         /// Trang đầu
         /// </summary>
-        public int pageIndex { get; set; }
+        public int PageIndex { get; set; } = 1;
 
         /// <summary>
         /// Tổng số trang
         /// </summary>
-        public int pageSize { get; set; }
+        public int PageSize { get; set; } = 10;
     }
 }
