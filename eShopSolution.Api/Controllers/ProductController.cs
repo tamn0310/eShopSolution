@@ -1,5 +1,6 @@
 ﻿using eShopSolution.Api.AppModels;
 using eShopSolution.Application.Catalog.Product;
+using eShopSolution.Dtos.Catalog.ProductImage;
 using eShopSolution.Dtos.Catalog.Products;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,32 +26,6 @@ namespace eShopSolution.Api.Controllers
             this._publicProductService = publicProductService;
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this._manageProductService = manageProductService;
-        }
-
-        /// <summary>
-        /// Lấy ra tất cả sản phẩm
-        /// </summary>
-        /// <returns></returns>
-        /// <response code="200">Trả ra tất cả bản ghi</response>
-        /// <response code="400"></response>
-        /// <response code="500">Lỗi server</response>
-        [HttpGet("products/{languageId}")]
-        [ProducesResponseType(typeof(ProductViewModel), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Get(string languageId)
-        {
-            try
-            {
-                var data = await _publicProductService.GetAll(languageId);
-
-                return Ok(data);
-            }
-            catch (Exception e)
-            {
-                this._logger.LogError(e.Message, e);
-                throw e;
-            }
         }
 
         /// <summary>
@@ -199,7 +174,7 @@ namespace eShopSolution.Api.Controllers
         /// <param name="id"></param>
         /// <param name="command"></param>
         /// <returns></returns>
-        [HttpPut("products/update-price/{id}")]
+        [HttpPatch("products/update-price/{id}")]
         [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -227,7 +202,7 @@ namespace eShopSolution.Api.Controllers
         /// <param name="id"></param>
         /// <param name="command"></param>
         /// <returns></returns>
-        [HttpPut("products/update-stock/{id}")]
+        [HttpPatch("products/update-stock/{id}")]
         [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -238,6 +213,113 @@ namespace eShopSolution.Api.Controllers
                 command.Id = id;
                 var updateStock = await _manageProductService.UpdateStock(command);
                 return this.Ok(updateStock);
+            }
+            catch (Exception e)
+            {
+                this._logger.LogError(e.Message, e);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Tạo mới thông tin ảnh cho sản phẩm
+        /// </summary>
+        /// <response code = "201" > Trả về data của sản phẩm vừa tạo</response>
+        /// <response code="400">Nếu các field nhập không đúng định dạng</response>
+        /// <response code="500">Lỗi server</response>
+        /// <param name="productId"></param>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPost("products/{productId}/image")]
+        [ProducesResponseType(typeof(ProductCreateRequest), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> CreateImage(int productId, [FromForm] CreateProductImageCommand command)
+        {
+            try
+            {
+                var imageId = await this._manageProductService.AddImage(productId, command);
+                if (imageId == 0)
+                {
+                    return BadRequest();
+                }
+
+                var image = await _manageProductService.GetImageById(productId, imageId);
+                return CreatedAtAction(nameof(GetImageById), new { id = productId }, image);
+            }
+            catch (Exception e)
+            {
+                this._logger.LogError(e.Message, e);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Lấy ra chi tiết hình ảnh thông qua id truyền vào
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <param name="imageId"></param>
+        /// <returns></returns>
+        [HttpGet("products/{productId}/image/{imageId}")]
+        public async Task<IActionResult> GetImageById(int productId, int imageId)
+        {
+            try
+            {
+                var image = await _manageProductService.GetImageById(productId, imageId);
+                if (image == null)
+                {
+                    return BadRequest("Cannot find product");
+                }
+                return Ok(image);
+            }
+            catch (Exception e)
+            {
+                this._logger.LogError(e.Message, e);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Cập nhật thông tin ảnh
+        /// </summary>
+        /// <param name="imageId"></param>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPut("products/{productId}/image/{imageId}")]
+        public async Task<IActionResult> UpdateImage(int imageId, [FromForm]UpdateProductImageCommand command)
+        {
+            try
+            {
+                var data = await _manageProductService.UpdateImage(imageId, command);
+                if (data == 0)
+                {
+                    return BadRequest();
+                }
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                this._logger.LogError(e.Message, e);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Xóa ảnh theo id
+        /// </summary>
+        /// <param name="imageId"></param>
+        /// <returns></returns>
+        [HttpDelete("products/{productId}/image/{imageId}")]
+        public async Task<IActionResult> DeleteImage(int imageId)
+        {
+            try
+            {
+                var result = await _manageProductService.RemoveImage(imageId);
+                if (result == 0)
+                {
+                    return BadRequest();
+                }
+                return Ok();
             }
             catch (Exception e)
             {

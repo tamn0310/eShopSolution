@@ -1,6 +1,6 @@
-﻿using eShopSolution.Dtos.Catalog.Products;
+﻿using eShopSolution.Dtos.Catalog.ProductImage;
+using eShopSolution.Dtos.Catalog.Products;
 using eShopSolution.Dtos.Common;
-using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -76,7 +76,7 @@ namespace eShopSolution.Application.Catalog.Product
         /// <param name="productId"></param>
         /// <param name="files"></param>
         /// <returns></returns>
-        Task<int> AddImgae(int productId, List<IFormFile> files);
+        Task<int> AddImage(int productId, CreateProductImageCommand command);
 
         /// <summary>
         /// Xóa ảnh của sản phẩm
@@ -92,6 +92,20 @@ namespace eShopSolution.Application.Catalog.Product
         /// <param name="Alt"></param>
         /// <param name="IsDefault"></param>
         /// <returns></returns>
-        Task<int> UpdateImage(int imageId, string Alt, bool IsDefault);
+        Task<int> UpdateImage(int imageId, UpdateProductImageCommand command);
+
+        /// <summary>
+        /// Lấy ra tất cả ảnh của sản phẩm thông qua id sản phẩm
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <returns></returns>
+        Task<List<ProductImageViewModel>> GetListImage(int productId);
+
+        /// <summary>
+        /// Lấy ra thông tin chi tiết ảnh thông qua id truyền vào
+        /// </summary>
+        /// <param name="imageId"></param>
+        /// <returns></returns>
+        Task<ProductImageViewModel> GetImageById(int productId, int imageId);
     }
 }

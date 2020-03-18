@@ -13,12 +13,5 @@ namespace eShopSolution.Application.Catalog.Product
         /// <param name="request"></param>
         /// <returns>Trả về 1 list sản phẩm</returns>
         Task<PagedResult<ProductViewModel>> GetAllByCategoryId(GetPublicProductPagingRequest request);
-
-        /// <summary>
-        /// Lấy ra tất cả sản phẩm
-        /// </summary>
-        /// <param name="languageId"></param>
-        /// <returns></returns>
-        Task<List<ProductViewModel>> GetAll(string languageId);
     }
 }
