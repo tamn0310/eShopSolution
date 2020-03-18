@@ -1,10 +1,10 @@
 ﻿using eShopSolution.Application.Common;
 using eShopSolution.Data.EF;
 using eShopSolution.Data.Entities;
+using eShopSolution.Dtos.Catalog.ProductImage;
 using eShopSolution.Dtos.Catalog.Products;
 using eShopSolution.Dtos.Common;
 using eShopSolution.Utilities.ExceptionCommon;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -30,9 +30,25 @@ namespace eShopSolution.Application.Catalog.Product
             this._logger = logger;
         }
 
-        public Task<int> AddImgae(int productId, List<IFormFile> files)
+        public async Task<int> AddImage(int productId, CreateProductImageCommand command)
         {
-            throw new NotImplementedException();
+            var image = new ProductImage()
+            {
+                Alt = command.Alt,
+                CreatedDate = DateTime.Now,
+                IsDefault = command.IsDefault,
+                SortOrder = command.SortOrder,
+                ProductId = productId
+            };
+
+            if (command.ImageFile != null)
+            {
+                image.Url = await this.SaveFile(command.ImageFile);
+                image.FileSize = command.ImageFile.Length;
+            }
+            _eShopDbContext.ProductImages.Add(image);
+            await _eShopDbContext.SaveChangesAsync();
+            return image.Id;
         }
 
         /// <summary>
@@ -214,9 +230,70 @@ namespace eShopSolution.Application.Catalog.Product
             return productViewModel;
         }
 
-        public Task<int> RemoveImage(int imageId)
+        /// <summary>
+        /// Lấy ra thông tin chi tiết ảnh thông qua id truyền vào
+        /// </summary>
+        /// <param name="imageId"></param>
+        /// <returns></returns>
+        public async Task<ProductImageViewModel> GetImageById(int productId, int imageId)
         {
-            throw new NotImplementedException();
+            var query = await _eShopDbContext.ProductImages.FindAsync(imageId);
+            if (query == null)
+            {
+                throw new EShopException($"Cannot find an image with id {imageId}");
+            }
+
+            var viewModel = new ProductImageViewModel()
+            {
+                Id = query.Id,
+                Alt = query.Alt,
+                CreatedDate = query.CreatedDate,
+                FileSize = query.FileSize,
+                Url = query.Url,
+                SortOrder = query.SortOrder,
+                ProductId = query.ProductId
+            };
+
+            return viewModel;
+        }
+
+        /// <summary>
+        /// Lấy ra tất cả thuộc sản phẩm thông qua id sản phẩm truyền vào
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <returns></returns>
+        public async Task<List<ProductImageViewModel>> GetListImage(int productId)
+        {
+            var query = _eShopDbContext.ProductImages.Where(x => x.ProductId == productId).Select(i => new ProductImageViewModel()
+            {
+                Id = i.Id,
+                Alt = i.Alt,
+                CreatedDate = i.CreatedDate,
+                FileSize = i.FileSize,
+                Url = i.Url,
+                SortOrder = i.SortOrder,
+                ProductId = i.ProductId
+            }).ToListAsync();
+
+            return await query;
+        }
+
+        /// <summary>
+        /// Xóa ảnh theo id
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <param name="imageId"></param>
+        /// <returns></returns>
+        public async Task<int> RemoveImage(int imageId)
+        {
+            var productImage = await _eShopDbContext.ProductImages.FindAsync(imageId);
+            if (productImage == null)
+            {
+                throw new EShopException($"Cannot find an image with id {imageId}");
+            }
+
+            _eShopDbContext.ProductImages.Remove(productImage);
+            return await _eShopDbContext.SaveChangesAsync();
         }
 
         /// <summary>
@@ -256,9 +333,21 @@ namespace eShopSolution.Application.Catalog.Product
             return await this._eShopDbContext.SaveChangesAsync();
         }
 
-        public Task<int> UpdateImage(int imageId, string Alt, bool IsDefault)
+        public async Task<int> UpdateImage(int imageId, UpdateProductImageCommand command)
         {
-            throw new NotImplementedException();
+            var productImage = await _eShopDbContext.ProductImages.FindAsync(imageId);
+            if (productImage == null)
+            {
+                throw new EShopException($"Cannot find an image with id {imageId}");
+            }
+
+            if (command.ImageFile != null)
+            {
+                productImage.Url = await this.SaveFile(command.ImageFile);
+                productImage.FileSize = command.ImageFile.Length;
+            }
+            _eShopDbContext.ProductImages.Update(productImage);
+            return await _eShopDbContext.SaveChangesAsync();
         }
 
         /// <summary>
