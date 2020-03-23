@@ -36,7 +36,7 @@ namespace eShopSolution.Api.Controllers
                 return BadRequest("user name or password is incorrect");
             }
 
-            return Ok(new { token = resultToken });
+            return Ok(new { access_token = resultToken });
         }
 
         /// <summary>

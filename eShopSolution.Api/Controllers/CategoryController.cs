@@ -2,6 +2,7 @@
 using eShopSolution.Application.Catalog.Category;
 using eShopSolution.Dtos.Catalog.Categories.Commands.Create;
 using eShopSolution.Dtos.Catalog.Categories.Queries;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -14,6 +15,7 @@ namespace eShopSolution.Api.Controllers
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}")]
     [Produces("application/json")]
+    [Authorize]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
