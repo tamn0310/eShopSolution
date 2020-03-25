@@ -1,7 +1,7 @@
-﻿using eShopSolution.Api.AppModels;
-using eShopSolution.Application.Catalog.Category;
-using eShopSolution.Dtos.Catalog.Categories.Commands.Create;
-using eShopSolution.Dtos.Catalog.Categories.Queries;
+﻿using eShopSolution.Api.Application.Commands.Categories.Create;
+using eShopSolution.Api.Application.Handler.Catalog.Category;
+using eShopSolution.Api.Application.Queries.Categories.GetAll;
+using eShopSolution.Api.AppModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,12 +18,12 @@ namespace eShopSolution.Api.Controllers
     [Authorize]
     public class CategoryController : ControllerBase
     {
-        private readonly ICategoryService _categoryService;
+        private readonly ICategoryHandler _categoryHandler;
         private readonly ILogger<CategoryController> _logger;
 
-        public CategoryController(ICategoryService categoryService, ILogger<CategoryController> logger)
+        public CategoryController(ICategoryHandler categoryHandler, ILogger<CategoryController> logger)
         {
-            this._categoryService = categoryService;
+            this._categoryHandler = categoryHandler;
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -33,14 +33,14 @@ namespace eShopSolution.Api.Controllers
         /// <param name="command"></param>
         /// <returns></returns>
         [HttpPost("categories")]
-        [ProducesResponseType(typeof(CategoryCreateCommand), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(CreateCategoryCommand), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Post([FromForm] CategoryCreateCommand command)
+        public async Task<IActionResult> Post([FromForm] CreateCategoryCommand command)
         {
             try
             {
-                var data = await this._categoryService.Create(command);
+                var data = await this._categoryHandler.Create(command);
                 var result = new ApiResult<int>
                 {
                     Message = ApiMessage.CreateOk,
@@ -64,14 +64,14 @@ namespace eShopSolution.Api.Controllers
         /// <response code="500">Lỗi server</response>
         /// <returns></returns>
         [HttpGet("categories/{languageId}")]
-        [ProducesResponseType(typeof(CategoryQueryDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CategoryGetAllDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAll(string languageId)
         {
             try
             {
-                var result = await _categoryService.GetAll(languageId);
+                var result = await _categoryHandler.GetAll(languageId);
                 return this.Ok(result);
             }
             catch (Exception e)
@@ -91,14 +91,14 @@ namespace eShopSolution.Api.Controllers
         /// <response code="500">Lỗi server</response>
         /// <returns></returns>
         [HttpGet("categories/{id:int}/{languageId}")]
-        [ProducesResponseType(typeof(CategoryQueryDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CategoryGetAllDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetById([FromRoute]int id, string languageId)
         {
             try
             {
-                var result = await _categoryService.GetById(id, languageId);
+                var result = await _categoryHandler.GetById(id, languageId);
                 return this.Ok(result);
             }
             catch (Exception e)

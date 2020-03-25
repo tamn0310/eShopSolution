@@ -1,11 +1,13 @@
+using eShopSolution.Api.Application.Handler.Catalog.Category;
+using eShopSolution.Api.Application.Handler.Catalog.Product;
+using eShopSolution.Api.Application.Handler.Common;
 using eShopSolution.Api.SwaggerOptions;
-using eShopSolution.Application.Catalog.Category;
 using eShopSolution.Application.Catalog.Product;
-using eShopSolution.Application.Common;
 using eShopSolution.Application.User;
 using eShopSolution.Data.EF;
 using eShopSolution.Data.Entities;
 using eShopSolution.Utilities.Contants;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -42,6 +44,8 @@ namespace eShopSolution.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            Assembly assembly = AppDomain.CurrentDomain.Load("eShopSolution.Api");
+
             services.AddDbContext<EShopDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString(SystemContants.MainConnectionString)));
 
@@ -50,15 +54,15 @@ namespace eShopSolution.Api
                 option.EnableEndpointRouting = false;
             });
 
-                services.AddIdentity<AppUser, AppRole>()
-                .AddEntityFrameworkStores<EShopDbContext>()
-                .AddDefaultTokenProviders();
+            services.AddIdentity<AppUser, AppRole>()
+            .AddEntityFrameworkStores<EShopDbContext>()
+            .AddDefaultTokenProviders();
             // dependency injection
-            services.AddTransient<IPublicProductService, PublicProductService>();
-            services.AddTransient<IManageProductService, ManageProductService>();
+            services.AddTransient<IPublicProductHandler, PublicProductHandler>();
+            services.AddTransient<IManageProductHandler, ManageProductHandler>();
             services.AddTransient<IStorageService, FileStorageService>();
-            services.AddTransient<ICategoryService, CategoryService>();
-            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ICategoryHandler, CategoryHandler>();
+            services.AddTransient<IUserHandler, UserHandler>();
             services.AddTransient<UserManager<AppUser>, UserManager<AppUser>>();
             services.AddTransient<SignInManager<AppUser>, SignInManager<AppUser>>();
             services.AddTransient<RoleManager<AppRole>, RoleManager<AppRole>>();
@@ -72,9 +76,19 @@ namespace eShopSolution.Api
              {
                  // Disable automatic 400 response: true
                  options.SuppressModelStateInvalidFilter = true;
+             })
+             .AddFluentValidation(fv =>
+             {
+                 //fv.RegisterValidatorsFromAssemblyContaining<LoginValidator>();
+                 //fv.RegisterValidatorsFromAssemblyContaining<RegisterValidator>();
+                 fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
+                 fv.RegisterValidatorsFromAssemblyContaining<Startup>();
              });
 
-            services.AddMvc();
+            services.AddMvc(option =>
+            {
+                option.EnableEndpointRouting = false;
+            });
 
             services.AddOptions();
 

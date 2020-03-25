@@ -1,5 +1,6 @@
-﻿using eShopSolution.Application.User;
-using eShopSolution.Dtos.User;
+﻿using eShopSolution.Api.Application.Commands.Login.Create;
+using eShopSolution.Api.Application.Commands.Register.Create;
+using eShopSolution.Application.User;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -11,9 +12,9 @@ namespace eShopSolution.Api.Controllers
     [Produces("application/json")]
     public class UserController : ControllerBase
     {
-        private readonly IUserService _userService;
+        private readonly IUserHandler _userService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserHandler userService)
         {
             this._userService = userService;
         }
@@ -24,7 +25,7 @@ namespace eShopSolution.Api.Controllers
         /// <param name="command"></param>
         /// <returns></returns>
         [HttpPost("users/auth")]
-        public async Task<IActionResult> Auth([FromForm]LoginCommandDto command)
+        public async Task<IActionResult> Auth([FromForm]CreateLoginCommand command)
         {
             if (!ModelState.IsValid)
             {
@@ -45,7 +46,7 @@ namespace eShopSolution.Api.Controllers
         /// <param name="command"></param>
         /// <returns></returns>
         [HttpPost("users/register")]
-        public async Task<IActionResult> Register([FromForm]RegisterCommandDto command)
+        public async Task<IActionResult> Register([FromForm]CreateRegisterCommand command)
         {
             if (!ModelState.IsValid)
             {
