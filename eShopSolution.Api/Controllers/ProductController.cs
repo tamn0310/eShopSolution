@@ -1,6 +1,11 @@
-﻿using eShopSolution.Api.AppModels;
-using eShopSolution.Application.Catalog.Product;
-using eShopSolution.Dtos.Catalog.ProductImage;
+﻿using eShopSolution.Api.Application.Commands.ProductImages.Create;
+using eShopSolution.Api.Application.Commands.ProductImages.Update;
+using eShopSolution.Api.Application.Commands.Products.Create;
+using eShopSolution.Api.Application.Commands.Products.Update;
+using eShopSolution.Api.Application.Commands.Produts.Update;
+using eShopSolution.Api.Application.Handler.Catalog.Product;
+using eShopSolution.Api.Application.Queries.Products;
+using eShopSolution.Api.AppModels;
 using eShopSolution.Dtos.Catalog.Products;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -18,16 +23,16 @@ namespace eShopSolution.Api.Controllers
     [Authorize]
     public class ProductController : ControllerBase
     {
-        private readonly IPublicProductService _publicProductService;
+        private readonly IPublicProductHandler _publicProductHandler;
         private readonly ILogger<ProductController> _logger;
-        private readonly IManageProductService _manageProductService;
+        private readonly IManageProductHandler _manageProductHandler;
 
-        public ProductController(IPublicProductService publicProductService, ILogger<ProductController> logger,
-            IManageProductService manageProductService)
+        public ProductController(IPublicProductHandler publicProductHandler, ILogger<ProductController> logger,
+            IManageProductHandler manageProductHandler)
         {
-            this._publicProductService = publicProductService;
+            this._publicProductHandler = publicProductHandler;
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            this._manageProductService = manageProductService;
+            this._manageProductHandler = manageProductHandler;
         }
 
         /// <summary>
@@ -46,7 +51,7 @@ namespace eShopSolution.Api.Controllers
         {
             try
             {
-                var data = await _publicProductService.GetAllByCategoryId(request);
+                var data = await _publicProductHandler.GetAllByCategoryId(request);
 
                 return Ok(data);
             }
@@ -66,7 +71,7 @@ namespace eShopSolution.Api.Controllers
         [HttpGet("products/{id:int}/{languageId}")]
         public async Task<IActionResult> GetById([FromRoute] int id, string languageId)
         {
-            var result = await _manageProductService.GetById(id, languageId);
+            var result = await _manageProductHandler.GetById(id, languageId);
             return this.Ok(result);
         }
 
@@ -79,14 +84,14 @@ namespace eShopSolution.Api.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost("products")]
-        [ProducesResponseType(typeof(ProductCreateRequest), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(CreateProductCommand), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Post([FromForm] ProductCreateRequest request)
+        public async Task<IActionResult> Post([FromForm] CreateProductCommand request)
         {
             try
             {
-                var data = await this._manageProductService.Create(request);
+                var data = await this._manageProductHandler.Create(request);
                 if (data == 0)
                 {
                     return BadRequest();
@@ -116,15 +121,15 @@ namespace eShopSolution.Api.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPut("products/{id:int}")]
-        [ProducesResponseType(typeof(ProductUpdateRequest), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(UpdateProductCommand), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Put(int id, [FromForm]ProductUpdateRequest request)
+        public async Task<IActionResult> Put(int id, [FromForm]UpdateProductCommand request)
         {
             try
             {
                 request.Id = id;
-                var updateProduct = await _manageProductService.Update(request);
+                var updateProduct = await _manageProductHandler.Update(request);
                 return this.Ok(updateProduct);
             }
             catch (Exception e)
@@ -150,7 +155,7 @@ namespace eShopSolution.Api.Controllers
         {
             try
             {
-                var data = await _manageProductService.Delete(id);
+                var data = await _manageProductHandler.Delete(id);
 
                 var result = new ApiResult<int>
                 {
@@ -185,7 +190,7 @@ namespace eShopSolution.Api.Controllers
             try
             {
                 command.Id = id;
-                var updatePrice = await _manageProductService.UpdatePrice(command);
+                var updatePrice = await _manageProductHandler.UpdatePrice(command);
                 return this.Ok(updatePrice);
             }
             catch (Exception e)
@@ -213,7 +218,7 @@ namespace eShopSolution.Api.Controllers
             try
             {
                 command.Id = id;
-                var updateStock = await _manageProductService.UpdateStock(command);
+                var updateStock = await _manageProductHandler.UpdateStock(command);
                 return this.Ok(updateStock);
             }
             catch (Exception e)
@@ -233,20 +238,20 @@ namespace eShopSolution.Api.Controllers
         /// <param name="command"></param>
         /// <returns></returns>
         [HttpPost("products/{productId}/image")]
-        [ProducesResponseType(typeof(ProductCreateRequest), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(CreateProductCommand), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateImage(int productId, [FromForm] CreateProductImageCommand command)
         {
             try
             {
-                var imageId = await this._manageProductService.AddImage(productId, command);
+                var imageId = await this._manageProductHandler.AddImage(productId, command);
                 if (imageId == 0)
                 {
                     return BadRequest();
                 }
 
-                var image = await _manageProductService.GetImageById(productId, imageId);
+                var image = await _manageProductHandler.GetImageById(productId, imageId);
                 return CreatedAtAction(nameof(GetImageById), new { id = productId }, image);
             }
             catch (Exception e)
@@ -267,7 +272,7 @@ namespace eShopSolution.Api.Controllers
         {
             try
             {
-                var image = await _manageProductService.GetImageById(productId, imageId);
+                var image = await _manageProductHandler.GetImageById(productId, imageId);
                 if (image == null)
                 {
                     return BadRequest("Cannot find product");
@@ -292,7 +297,7 @@ namespace eShopSolution.Api.Controllers
         {
             try
             {
-                var data = await _manageProductService.UpdateImage(imageId, command);
+                var data = await _manageProductHandler.UpdateImage(imageId, command);
                 if (data == 0)
                 {
                     return BadRequest();
@@ -316,7 +321,7 @@ namespace eShopSolution.Api.Controllers
         {
             try
             {
-                var result = await _manageProductService.RemoveImage(imageId);
+                var result = await _manageProductHandler.RemoveImage(imageId);
                 if (result == 0)
                 {
                     return BadRequest();
