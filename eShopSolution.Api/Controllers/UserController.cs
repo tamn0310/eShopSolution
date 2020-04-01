@@ -25,7 +25,7 @@ namespace eShopSolution.Api.Controllers
         /// <param name="command"></param>
         /// <returns></returns>
         [HttpPost("users/auth")]
-        public async Task<IActionResult> Auth([FromForm]CreateLoginCommand command)
+        public async Task<IActionResult> Auth([FromBody]CreateLoginCommand command)
         {
             if (!ModelState.IsValid)
             {
@@ -37,7 +37,7 @@ namespace eShopSolution.Api.Controllers
                 return BadRequest("user name or password is incorrect");
             }
 
-            return Ok(new { access_token = resultToken });
+            return Ok(resultToken);
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace eShopSolution.Api.Controllers
         /// <param name="command"></param>
         /// <returns></returns>
         [HttpPost("users/register")]
-        public async Task<IActionResult> Register([FromForm]CreateRegisterCommand command)
+        public async Task<IActionResult> Register([FromBody]CreateRegisterCommand command)
         {
             if (!ModelState.IsValid)
             {

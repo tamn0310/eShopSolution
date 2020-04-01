@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using eShopSplution.AdminWeb.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace eShopSplution.AdminWeb.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -20,11 +22,7 @@ namespace eShopSplution.AdminWeb.Controllers
 
         public IActionResult Index()
         {
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
+            var userName = User.Identity.Name;
             return View();
         }
 

@@ -67,20 +67,9 @@ namespace eShopSolution.Api
             services.AddTransient<SignInManager<AppUser>, SignInManager<AppUser>>();
             services.AddTransient<RoleManager<AppRole>, RoleManager<AppRole>>();
 
-            services.AddControllers(options =>
-            {
-                options.RespectBrowserAcceptHeader = true; // false by default
-            })
-             .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
-             .ConfigureApiBehaviorOptions(options =>
-             {
-                 // Disable automatic 400 response: true
-                 options.SuppressModelStateInvalidFilter = true;
-             })
+            services.AddControllersWithViews()
              .AddFluentValidation(fv =>
              {
-                 //fv.RegisterValidatorsFromAssemblyContaining<LoginValidator>();
-                 //fv.RegisterValidatorsFromAssemblyContaining<RegisterValidator>();
                  fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
                  fv.RegisterValidatorsFromAssemblyContaining<Startup>();
              });
@@ -245,7 +234,7 @@ namespace eShopSolution.Api
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapDefaultControllerRoute();
             });
         }
     }
