@@ -1,11 +1,11 @@
 ﻿using eShopSolution.Api.Application.Commands.Login.Create;
 using eShopSolution.Api.Application.Commands.Register.Create;
 using eShopSolution.Data.Entities;
-using eShopSolution.Utilities.ExceptionCommon;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -37,37 +37,32 @@ namespace eShopSolution.Application.User
         public async Task<string> Auth(CreateLoginCommand command)
         {
             var user = await _userManager.FindByNameAsync(command.UserName);
-            if (user == null)
-            {
-                throw new EShopException("cannot find user name");
-            }
+            if (user == null) return null;
 
             var result = await _signInManager.PasswordSignInAsync(user, command.PassWord, command.RememberMe, true);
-
             if (!result.Succeeded)
             {
                 return null;
             }
-            var role = await _userManager.GetRolesAsync(user);
+            var roles = await _userManager.GetRolesAsync(user);
 
-            var claims = new[]
+            var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.MobilePhone, user.PhoneNumber),
-                new Claim(ClaimTypes.GivenName, user.FirstName),
-                new Claim(ClaimTypes.Role, string.Join(";", role))
+                new Claim(ClaimTypes.Email,user.Email),
+                new Claim(ClaimTypes.GivenName,user.FirstName),
+                new Claim(ClaimTypes.Role, string.Join(";",roles)),
+                new Claim(ClaimTypes.Name, command.UserName)
             };
-
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var access_token = new JwtSecurityToken(_config["Token:Issuer"],
-                _config["Token:Issuer"],
+            var token = new JwtSecurityToken(_config["Tokens:Issuer"],
+                _config["Tokens:Issuer"],
                 claims,
                 expires: DateTime.Now.AddHours(3),
                 signingCredentials: creds);
 
-            return new JwtSecurityTokenHandler().WriteToken(access_token);
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
         /// <summary>
