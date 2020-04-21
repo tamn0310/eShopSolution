@@ -120,7 +120,10 @@ namespace eShopSolution.Data.SeedData
                     SecurityStamp = string.Empty,
                     FirstName = "Nguyễn",
                     LastName = "Tâm",
-                    Dob = new DateTime(1998, 10, 03)
+                    Dob = new DateTime(1998, 10, 03),
+                    CreatedAt = DateTime.Now,
+                    CreatedBy = "system",
+                    UpdatedBy = null
                 });
 
             //data table AppUserRole

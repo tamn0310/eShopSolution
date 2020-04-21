@@ -25,6 +25,11 @@ namespace eShopSplution.AdminWeb
             //Assembly assembly = AppDomain.CurrentDomain.Load("eShopSolution.AdminWeb");
             services.AddHttpClient();
 
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+            });
+
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
@@ -75,7 +80,7 @@ namespace eShopSplution.AdminWeb
             app.UseRouting();
 
             app.UseAuthorization();
-
+            app.UseSession();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

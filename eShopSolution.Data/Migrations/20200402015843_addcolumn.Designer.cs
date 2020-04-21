@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using eShopSolution.Data.EF;
 
 namespace eShopSolution.Data.Migrations
 {
     [DbContext(typeof(EShopDbContext))]
-    partial class EShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200402015843_addcolumn")]
+    partial class addcolumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -257,7 +259,7 @@ namespace eShopSolution.Data.Migrations
                         new
                         {
                             Id = new Guid("8d04dce2-969a-435d-bba4-df3f325983dc"),
-                            ConcurrencyStamp = "3081d893-000e-4b90-949b-02faf8298ffa",
+                            ConcurrencyStamp = "e4448a92-5f0a-4b3c-b9b9-5029da24bf96",
                             Description = "Administrator role",
                             Name = "admin",
                             NormalizedName = "admin"
@@ -280,12 +282,6 @@ namespace eShopSolution.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Dob")
@@ -334,12 +330,6 @@ namespace eShopSolution.Data.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("UserName")
                         .HasColumnType("nvarchar(max)");
 
@@ -352,9 +342,7 @@ namespace eShopSolution.Data.Migrations
                         {
                             Id = new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "7cffc5e9-a558-40cf-a41a-c8bc3c29bd5d",
-                            CreatedAt = new DateTime(2020, 4, 21, 15, 3, 30, 444, DateTimeKind.Local).AddTicks(3893),
-                            CreatedBy = "system",
+                            ConcurrencyStamp = "0f6d7235-21a1-4f56-9c57-c65741d0b41d",
                             Dob = new DateTime(1998, 10, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "tamn0310@gmail.com",
                             EmailConfirmed = true,
@@ -363,11 +351,10 @@ namespace eShopSolution.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "tamn0310@gmail.com",
                             NormalizedUserName = "tamn0310",
-                            PasswordHash = "AQAAAAEAACcQAAAAEGYr3bOjq1Y+aSUvUluQPf5kFzW9OhMPHY8LP1w9t3/QAb7F0hEQqWyagR8sNSZFcQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEImGmH3goLyOjirmkFHwcfA8LFHtBULhmAQWY+HUUIYxFSe6n/22zCZy7GPVihfUcQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserName = "tamn0310"
                         });
                 });
@@ -881,7 +868,7 @@ namespace eShopSolution.Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedDate = new DateTime(2020, 4, 21, 15, 3, 30, 403, DateTimeKind.Local).AddTicks(9739),
+                            CreatedDate = new DateTime(2020, 4, 2, 8, 58, 42, 108, DateTimeKind.Local).AddTicks(8461),
                             OriginalPrice = 100000m,
                             Price = 200000m,
                             Stock = 0,
