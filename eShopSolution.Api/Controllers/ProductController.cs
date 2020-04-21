@@ -6,7 +6,7 @@ using eShopSolution.Api.Application.Commands.Produts.Update;
 using eShopSolution.Api.Application.Handler.Catalog.Product;
 using eShopSolution.Api.Application.Queries.Products;
 using eShopSolution.Api.AppModels;
-using eShopSolution.Dtos.Catalog.Products;
+using eShopSolution.Application.Queries.Products;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -41,15 +41,42 @@ namespace eShopSolution.Api.Controllers
         /// <response code="400"></response>
         /// <response code="500">Lỗi server</response>
         /// <returns></returns>
-        [HttpGet("products/get-paging")]
+        [HttpGet("products/get-paging-by-cate")]
         [ProducesResponseType(typeof(ProductViewModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetPaging([FromQuery]GetPublicProductPagingRequest request)
+        public async Task<IActionResult> GetPagingByCate([FromQuery]GetPublicProductPagingRequest request)
         {
             try
             {
                 var data = await _manageProductHandler.GetAllByCategoryId(request);
+
+                return Ok(data);
+            }
+            catch (Exception e)
+            {
+                this._logger.LogError(e.Message, e);
+                throw e;
+            }
+        }
+
+        /// <summary>
+        /// Lấy ra tất cả sản phẩm phân trang
+        /// </summary>
+        /// <param name="request"></param>
+        /// <response code="200">Trả ra tất cả bản ghi</response>
+        /// <response code="400"></response>
+        /// <response code="500">Lỗi server</response>
+        /// <returns></returns>
+        [HttpGet("products/get-paging")]
+        [ProducesResponseType(typeof(ProductViewModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetPaging([FromQuery]GetManageProductPagingRequest request)
+        {
+            try
+            {
+                var data = await _manageProductHandler.GetAllPaging(request);
 
                 return Ok(data);
             }

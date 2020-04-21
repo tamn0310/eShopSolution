@@ -8,9 +8,9 @@ using eShopSolution.Api.Application.Commands.Produts.Update;
 using eShopSolution.Api.Application.Handler.Catalog.Product;
 using eShopSolution.Api.Application.Handler.Common;
 using eShopSolution.Api.Application.Queries.Products;
+using eShopSolution.Application.Queries.Products;
 using eShopSolution.Data.EF;
 using eShopSolution.Data.Entities;
-using eShopSolution.Dtos.Catalog.Products;
 using eShopSolution.Utilities.ExceptionCommon;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -218,11 +218,6 @@ namespace eShopSolution.Application.Catalog.Product
                 query = query.Where(x => x.pt.Name.Contains(request.Keyword));
             }
 
-            // Kiểm tra có tồn tại param CategoryIds truyền vào
-            if (request.CategoryIds.Count > 0)
-            {
-                query = query.Where(x => request.CategoryIds.Contains(x.pic.CategoryId));
-            }
 
             /*Paging*/
             int totalRow = await query.CountAsync();
