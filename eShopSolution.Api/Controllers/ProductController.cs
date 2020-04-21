@@ -23,14 +23,12 @@ namespace eShopSolution.Api.Controllers
     [Authorize]
     public class ProductController : ControllerBase
     {
-        private readonly IPublicProductHandler _publicProductHandler;
         private readonly ILogger<ProductController> _logger;
         private readonly IManageProductHandler _manageProductHandler;
 
-        public ProductController(IPublicProductHandler publicProductHandler, ILogger<ProductController> logger,
+        public ProductController(ILogger<ProductController> logger,
             IManageProductHandler manageProductHandler)
         {
-            this._publicProductHandler = publicProductHandler;
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this._manageProductHandler = manageProductHandler;
         }
@@ -51,7 +49,7 @@ namespace eShopSolution.Api.Controllers
         {
             try
             {
-                var data = await _publicProductHandler.GetAllByCategoryId(request);
+                var data = await _manageProductHandler.GetAllByCategoryId(request);
 
                 return Ok(data);
             }

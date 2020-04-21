@@ -110,5 +110,12 @@ namespace eShopSolution.Api.Application.Handler.Catalog.Product
         /// <param name="imageId"></param>
         /// <returns></returns>
         Task<ProductImageViewModel> GetImageById(int productId, int imageId);
+
+        /// <summary>
+        /// Lấy tất cả sản phẩm thông qua id danh mục
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>Trả về 1 list sản phẩm</returns>
+        Task<PagedResult<ProductViewModel>> GetAllByCategoryId(GetPublicProductPagingRequest request);
     }
 }

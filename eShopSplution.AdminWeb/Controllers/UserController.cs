@@ -1,7 +1,9 @@
 ﻿using eShopSolution.Api.Application.Commands.Login.Create;
+using eShopSolution.Api.Application.Queries.Users;
 using eShopSplution.AdminWeb.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -28,9 +30,26 @@ namespace eShopSplution.AdminWeb.Controllers
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public IActionResult Index()
+        /// <summary>
+        /// show all list user
+        /// </summary>
+        /// <param name="search"></param>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> Index(string search, int page = 1, int limit = 10)
         {
-            return View();
+            var session = HttpContext.Session.GetString("Token");
+            var request = new GetUserPagingRequest()
+            {
+                PageIndex = page,
+                PageSize = limit,
+                Search = search,
+                BearerToken = session
+            };
+            var data = await _userClientApi.GetUserPaging(request);
+
+            return View(data);
         }
 
         /// <summary>
@@ -64,6 +83,8 @@ namespace eShopSplution.AdminWeb.Controllers
                 ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
                 IsPersistent = false
             };
+
+            HttpContext.Session.SetString("Token", token);
             await HttpContext.SignInAsync(
                         CookieAuthenticationDefaults.AuthenticationScheme,
                         userPrincipal,
@@ -76,6 +97,7 @@ namespace eShopSplution.AdminWeb.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            HttpContext.Session.Remove("Token");
             return RedirectToAction("Login", "User");
         }
 

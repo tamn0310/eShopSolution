@@ -1,14 +1,14 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace eShopSolution.Data.Entities
+namespace eShopSolution.Api.Application.Queries.Users
 {
-    /// <summary>
-    /// Thông tin người dùng
-    /// </summary>
-    public class AppUser : IdentityUser<Guid>
+    public class UserPagingDto
     {
+        public Guid Id { get; set; }
+
         /// <summary>
         /// Họ của người dùng
         /// </summary>
@@ -20,9 +20,24 @@ namespace eShopSolution.Data.Entities
         public string LastName { get; set; }
 
         /// <summary>
+        /// Tên đăng nhập
+        /// </summary>
+        public string UserName { get; set; }
+
+        /// <summary>
         /// Ngày sinh của người dùng
         /// </summary>
         public DateTime Dob { get; set; }
+
+        /// <summary>
+        /// ảnh của người dùng
+        /// </summary>
+        public string Avatar { get; set; }
+
+        /// <summary>
+        /// Địa chỉ mail của người dùng
+        /// </summary>
+        public string Email { get; set; }
 
         /// <summary>
         /// Địa chỉ của người dùng
@@ -30,24 +45,9 @@ namespace eShopSolution.Data.Entities
         public string Address { get; set; }
 
         /// <summary>
-        /// ảnh đại diện
+        /// Số điện thoại của người dùng
         /// </summary>
-        public string Avatar { get; set; }
-
-        /// <summary>
-        /// Thông tin giỏ hàng của người dùng
-        /// </summary>
-        public List<Cart> Carts { get; set; }
-
-        /// <summary>
-        /// Thông tin đơn hàng của người dung
-        /// </summary>
-        public List<Order> Orders { get; set; }
-
-        /// <summary>
-        /// Thông tin giao dịch của người dùng
-        /// </summary>
-        public List<Transaction> Transactions { get; set; }
+        public string PhoneNumber { get; set; }
 
         /// <summary>
         /// Ngày tạo

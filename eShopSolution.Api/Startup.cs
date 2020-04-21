@@ -58,7 +58,6 @@ namespace eShopSolution.Api
             .AddEntityFrameworkStores<EShopDbContext>()
             .AddDefaultTokenProviders();
             // dependency injection
-            services.AddTransient<IPublicProductHandler, PublicProductHandler>();
             services.AddTransient<IManageProductHandler, ManageProductHandler>();
             services.AddTransient<IStorageService, FileStorageService>();
             services.AddTransient<ICategoryHandler, CategoryHandler>();
