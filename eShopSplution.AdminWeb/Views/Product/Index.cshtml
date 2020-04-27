@@ -1,8 +1,8 @@
 ﻿@using eShopSolution.Api.Application;
-@model PagedResult<eShopSolution.Api.Application.Queries.Users.UserPagingDto>
+@model PagedResult<eShopSolution.Application.Queries.Products.ProductViewModel>
 
 @{
-    ViewData["Title"] = "Người dùng";
+    ViewData["Title"] = "Sản phẩm";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -15,25 +15,25 @@
     <thead>
         <tr>
             <th>
-                Tên
+                Id
             </th>
             <th>
-                Tài khoản
-            </th>
-            <th>
-                Dob
-            </th>
-            <th>
-                Email
+                Giá tiền
             </th>
 
             <th>
-                Sđt
+                Tình trạng
             </th>
             <th>
                 Ngày tạo
             </th>
+            <th>
+                Tên sản phẩm
+            </th>
 
+            <th>
+                LanguageId
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -42,25 +42,26 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.LastName)
+                    @Html.DisplayFor(modelItem => item.Id)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.UserName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Dob)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
+                    @Html.DisplayFor(modelItem => item.Price)
                 </td>
 
                 <td>
-                    @Html.DisplayFor(modelItem => item.PhoneNumber)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreatedAt)
+                    @Html.DisplayFor(modelItem => item.Stock)
                 </td>
 
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateCreated)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.LanguageId)
+                </td>
                 <td>
                     @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
                     @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |

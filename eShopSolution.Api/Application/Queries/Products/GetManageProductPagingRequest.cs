@@ -11,10 +11,5 @@ namespace eShopSolution.Api.Application.Queries.Products
         /// Từ khóa
         /// </summary>
         public string Keyword { get; set; }
-
-        /// <summary>
-        /// Danh sách danh mục sản phẩm
-        /// </summary>
-        public List<int> CategoryIds { get; set; }
     }
 }

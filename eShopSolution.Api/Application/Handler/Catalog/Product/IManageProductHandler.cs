@@ -5,7 +5,7 @@ using eShopSolution.Api.Application.Commands.Products.Create;
 using eShopSolution.Api.Application.Commands.Products.Update;
 using eShopSolution.Api.Application.Commands.Produts.Update;
 using eShopSolution.Api.Application.Queries.Products;
-using eShopSolution.Dtos.Catalog.Products;
+using eShopSolution.Application.Queries.Products;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

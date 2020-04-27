@@ -58,6 +58,8 @@ namespace eShopSplution.AdminWeb
 
             //DI
             services.AddTransient<IUserClientApi, UserClientApi>();
+            services.AddTransient<IProductClientApi, ProductClientApi>();
+            //services.AddTransient<IUserClientApi, UserClientApi>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
