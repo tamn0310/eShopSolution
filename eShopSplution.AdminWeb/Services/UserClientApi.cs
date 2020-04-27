@@ -1,5 +1,6 @@
 ﻿using eShopSolution.Api.Application;
 using eShopSolution.Api.Application.Commands.Login.Create;
+using eShopSolution.Api.Application.Commands.Register.Create;
 using eShopSolution.Api.Application.Queries.Users;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -38,6 +39,22 @@ namespace eShopSplution.AdminWeb.Services
             var token = await response.Content.ReadAsStringAsync();
             var new_token = token.Replace('\"', ' ').Trim();
             return new_token;
+        }
+
+        /// <summary>
+        /// Tạp mới người dùng
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        public async Task<bool> CreateUser(CreateRegisterCommand command)
+        {
+            var json = JsonConvert.SerializeObject(command);
+            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(_configuration["BaseAddress"]);
+            var response = await client.PostAsync("/api/v1/users/register", httpContent);
+            return response.IsSuccessStatusCode;
         }
 
         /// <summary>

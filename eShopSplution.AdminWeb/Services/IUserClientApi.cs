@@ -1,5 +1,6 @@
 ﻿using eShopSolution.Api.Application;
 using eShopSolution.Api.Application.Commands.Login.Create;
+using eShopSolution.Api.Application.Commands.Register.Create;
 using eShopSolution.Api.Application.Queries.Users;
 using System.Threading.Tasks;
 
@@ -20,5 +21,12 @@ namespace eShopSplution.AdminWeb.Services
         /// <param name="request"></param>
         /// <returns></returns>
         Task<PagedResult<UserPagingDto>> GetUserPaging(GetUserPagingRequest request);
+
+        /// <summary>
+        /// Tạo mới người dùng
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        Task<bool> CreateUser(CreateRegisterCommand command);
     }
 }
