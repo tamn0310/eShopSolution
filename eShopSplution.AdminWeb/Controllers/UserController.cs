@@ -1,4 +1,4 @@
-﻿using eShopSolution.Api.Application.Commands.Login.Create;
+﻿using eShopSolution.Api.Application.Commands.Register.Create;
 using eShopSolution.Api.Application.Queries.Users;
 using eShopSplution.AdminWeb.Services;
 using Microsoft.AspNetCore.Authentication;
@@ -7,17 +7,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Logging;
-using Microsoft.IdentityModel.Tokens;
 using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace eShopSplution.AdminWeb.Controllers
 {
-    public class UserController : Controller
+    public class UserController : BaseController
     {
         private readonly IUserClientApi _userClientApi;
         private readonly IConfiguration _configuration;
@@ -52,47 +47,6 @@ namespace eShopSplution.AdminWeb.Controllers
             return View(data);
         }
 
-        /// <summary>
-        /// Đăng nhập
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        public async Task<IActionResult> Login()
-        {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return View();
-        }
-
-        /// <summary>
-        /// Đăng nhập - post thông tin từ form
-        /// </summary>
-        /// <param name="command"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<IActionResult> Login(CreateLoginCommand command)
-        {
-            if (!ModelState.IsValid)
-                return View(ModelState);
-
-            var token = await _userClientApi.Auth(command);
-
-            var userPrincipal = this.ValidateToken(token);
-
-            var authProperties = new AuthenticationProperties
-            {
-                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
-                IsPersistent = false
-            };
-
-            HttpContext.Session.SetString("Token", token);
-            await HttpContext.SignInAsync(
-                        CookieAuthenticationDefaults.AuthenticationScheme,
-                        userPrincipal,
-                        authProperties);
-
-            return RedirectToAction("Index", "Home");
-        }
-
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
@@ -101,35 +55,23 @@ namespace eShopSplution.AdminWeb.Controllers
             return RedirectToAction("Login", "User");
         }
 
-        /// <summary>
-        /// validation claims
-        /// </summary>
-        /// <param name="jwtToken"></param>
-        /// <returns></returns>
-        private ClaimsPrincipal ValidateToken(string jwtToken)
+        [HttpGet]
+        public IActionResult Create()
         {
-            try
-            {
-                IdentityModelEventSource.ShowPII = true;
+            return View();
+        }
 
-                SecurityToken validatedToken;
-                TokenValidationParameters validationParameters = new TokenValidationParameters();
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateRegisterCommand command)
+        {
+            if (!ModelState.IsValid)
+                return View();
 
-                validationParameters.ValidateLifetime = true;
+            var result = await _userClientApi.CreateUser(command);
+            if (result)
+                return RedirectToAction("Index");
 
-                validationParameters.ValidAudience = _configuration["Tokens:Issuer"];
-                validationParameters.ValidIssuer = _configuration["Tokens:Issuer"];
-                validationParameters.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"]));
-
-                ClaimsPrincipal principal = new JwtSecurityTokenHandler().ValidateToken(jwtToken, validationParameters, out validatedToken);
-
-                return principal;
-            }
-            catch (Exception e)
-            {
-                this._logger.LogError(e.Message, e);
-                throw e;
-            }
+            return View(command);
         }
     }
 }

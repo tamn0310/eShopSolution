@@ -173,6 +173,8 @@ namespace eShopSolution.Application.User
                 FirstName = command.FirstName,
                 LastName = command.LastName,
                 PhoneNumber = command.PhoneNumber,
+                CreatedAt = DateTime.Now,
+                CreatedBy = "system"
             };
 
             var result = await _userManager.CreateAsync(user, command.PassWord);
