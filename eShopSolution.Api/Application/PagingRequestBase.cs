@@ -3,7 +3,7 @@
     /// <summary>
     /// phân trang
     /// </summary>
-    public class PagingRequestBase : RequestBase
+    public class PagingRequestBase
     {
         /// <summary>
         /// Trang đầu
