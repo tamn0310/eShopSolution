@@ -109,7 +109,9 @@ namespace eShopSolution.Application.User
             /*Select and projection*/
             var pageResult = new PagedResult<UserPagingDto>()
             {
-                TotalRecord = totalRow,
+                Total = totalRow,
+                Page = request.PageIndex,
+                Limit = request.PageSize,
                 Items = data
             };
 
@@ -134,6 +136,7 @@ namespace eShopSolution.Application.User
                 Email = user.Email,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
+                UserName = user.UserName,
                 PhoneNumber = user.PhoneNumber,
                 Dob = user.Dob,
                 Address = user.Address,
