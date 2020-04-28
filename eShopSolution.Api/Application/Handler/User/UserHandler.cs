@@ -1,10 +1,9 @@
 ﻿using eShopSolution.Api.Application;
 using eShopSolution.Api.Application.Commands.Login.Create;
 using eShopSolution.Api.Application.Commands.Register.Create;
+using eShopSolution.Api.Application.Commands.User;
 using eShopSolution.Api.Application.Queries.Users;
-using eShopSolution.Data.EF;
 using eShopSolution.Data.Entities;
-using eShopSolution.Utilities.ExceptionCommon;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -27,17 +26,16 @@ namespace eShopSolution.Application.User
         private readonly RoleManager<AppRole> _roleManager;
         private readonly IConfiguration _config;
         private readonly ILogger<UserHandler> _logger;
-        private readonly EShopDbContext _context;
 
         public UserHandler(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager,
-            RoleManager<AppRole> roleManager, IConfiguration config, ILogger<UserHandler> logger, EShopDbContext context)
+            RoleManager<AppRole> roleManager, IConfiguration config,
+            ILogger<UserHandler> logger)
         {
             this._userManager = userManager;
             this._signInManager = signInManager;
             this._roleManager = roleManager;
             this._config = config;
             this._logger = logger ?? throw new ArgumentException(nameof(logger));
-            this._context = context;
         }
 
         /// <summary>
@@ -45,7 +43,7 @@ namespace eShopSolution.Application.User
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
-        public async Task<string> Auth(CreateLoginCommand command)
+        public async Task<ApiResult<string>> Auth(CreateLoginCommand command)
         {
             var user = await _userManager.FindByNameAsync(command.UserName);
             if (user == null) return null;
@@ -73,7 +71,7 @@ namespace eShopSolution.Application.User
                 expires: DateTime.Now.AddHours(3),
                 signingCredentials: creds);
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return new ApiResultSuccess<string>(new JwtSecurityTokenHandler().WriteToken(token));
         }
 
         /// <summary>
@@ -81,7 +79,7 @@ namespace eShopSolution.Application.User
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<PagedResult<UserPagingDto>> GetAllPaging(GetUserPagingRequest request)
+        public async Task<ApiResult<PagedResult<UserPagingDto>>> GetAllPaging(GetUserPagingRequest request)
         {
             var query = _userManager.Users;
             if (!string.IsNullOrEmpty(request.Search))
@@ -94,18 +92,18 @@ namespace eShopSolution.Application.User
                 .Take(request.PageSize)
                 .Select(x => new UserPagingDto()
                 {
-                   Id = x.Id,
-                   UserName = x.UserName,
-                   FirstName = x.FirstName,
-                   LastName = x.LastName,
-                   Email = x.Email,
-                   Address = x.Address,
-                   PhoneNumber = x.PhoneNumber,
-                   Dob = x.Dob,
-                   CreatedAt = x.CreatedAt,
-                   CreatedBy = x.CreatedBy,
-                   UpdatedAt = x.UpdatedAt,
-                   UpdatedBy = x.UpdatedBy
+                    Id = x.Id,
+                    UserName = x.UserName,
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    Email = x.Email,
+                    Address = x.Address,
+                    PhoneNumber = x.PhoneNumber,
+                    Dob = x.Dob,
+                    CreatedAt = x.CreatedAt,
+                    CreatedBy = x.CreatedBy,
+                    UpdatedAt = x.UpdatedAt,
+                    UpdatedBy = x.UpdatedBy
                 }).ToListAsync();
 
             /*Select and projection*/
@@ -115,47 +113,37 @@ namespace eShopSolution.Application.User
                 Items = data
             };
 
-            return pageResult;
+            return new ApiResultSuccess<PagedResult<UserPagingDto>>(pageResult);
         }
 
         /// <summary>
         /// Lấy thông tin người dùng qua id
         /// </summary>
-        /// <param name="query"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<GetDetailUserDto> GetProfileUser(GetDetailUserDto query)
+        public async Task<ApiResult<GetDetailUserDto>> GetProfileUser(Guid id)
         {
-            if (query is null)
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user == null)
             {
-                throw new ArgumentNullException(nameof(query));
+                return new ApiResultError<GetDetailUserDto>("Người dùng không tồn tại");
             }
+            var userVm = new GetDetailUserDto()
+            {
+                Id = user.Id,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                PhoneNumber = user.PhoneNumber,
+                Dob = user.Dob,
+                Address = user.Address,
+                CreatedAt = user.CreatedAt,
+                CreatedBy = user.CreatedBy,
+                UpdatedAt = user.UpdatedAt,
+                UpdatedBy = user.UpdatedBy
+            };
 
-            try
-            {
-                var user = await _context.AppUsers.FindAsync(query.Id);
-                if (user == null)
-                {
-                    throw new EShopException($"cannot find a user with id: {query.Id}");
-                }
-
-                var detailUser = new GetDetailUserDto()
-                {
-                    Id = user.Id,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Address = user.Address,
-                    Avatar = user.Avatar,
-                    PhoneNumber = user.PhoneNumber,
-                    Dob = user.Dob,
-                    Email = user.Email,
-                };
-                return detailUser;
-            }
-            catch (Exception e)
-            {
-                this._logger.LogError(e.Message, e);
-                throw;
-            }
+            return new ApiResultSuccess<GetDetailUserDto>(userVm);
         }
 
         /// <summary>
@@ -163,9 +151,20 @@ namespace eShopSolution.Application.User
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
-        public async Task<bool> Register(CreateRegisterCommand command)
+        public async Task<ApiResult<bool>> Register(CreateRegisterCommand command)
         {
-            var user = new AppUser()
+            var user = await _userManager.FindByNameAsync(command.UserName);
+            if (user != null)
+            {
+                return new ApiResultError<bool>("Tài khoản đã tồn tại");
+            }
+
+            if (await _userManager.FindByEmailAsync(command.Email) != null)
+            {
+                return new ApiResultError<bool>("Email đã tồn tại");
+            }
+
+            user = new AppUser()
             {
                 UserName = command.UserName,
                 Email = command.Email,
@@ -178,11 +177,42 @@ namespace eShopSolution.Application.User
             };
 
             var result = await _userManager.CreateAsync(user, command.PassWord);
-            if (!result.Succeeded)
+            if (result.Succeeded)
             {
-                return false;
+                return new ApiResultSuccess<bool>();
             }
-            return true;
+            return new ApiResultError<bool>("Đăng ký không thành công");
+        }
+
+        /// <summary>
+        /// Cập nhật người dùng
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        public async Task<ApiResult<bool>> Update(Guid id, UpdateUserCommand command)
+        {
+            if (await _userManager.Users.AnyAsync(x => x.Email == command.Email && x.Id != id))
+            {
+                return new ApiResultError<bool>("Email đã tồn tại");
+            }
+
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            user.Email = command.Email;
+            user.Dob = command.Dob;
+            user.FirstName = command.FirstName;
+            user.LastName = command.LastName;
+            user.PhoneNumber = command.PhoneNumber;
+            user.Address = command.Address;
+            user.UpdatedAt = DateTime.Now;
+            user.UpdatedBy = "system";
+
+            var result = await _userManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                return new ApiResultSuccess<bool>();
+            }
+            return new ApiResultError<bool>("Cập nhật không thành công");
         }
     }
 }

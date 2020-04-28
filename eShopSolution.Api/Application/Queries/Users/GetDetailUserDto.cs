@@ -17,6 +17,11 @@ namespace eShopSolution.Api.Application.Queries.Users
         public string LastName { get; set; }
 
         /// <summary>
+        /// Tên đăng nhập
+        /// </summary>
+        public string UserName { get; set; }
+
+        /// <summary>
         /// Ngày sinh của người dùng
         /// </summary>
         public DateTime Dob { get; set; }

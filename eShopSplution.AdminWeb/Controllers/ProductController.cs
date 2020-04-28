@@ -37,7 +37,6 @@ namespace eShopSplution.AdminWeb.Controllers
                 PageIndex = page,
                 PageSize = limit,
                 Keyword = search,
-                BearerToken = session,
             };
             var data = await _productClientApi.GetAll(request);
 

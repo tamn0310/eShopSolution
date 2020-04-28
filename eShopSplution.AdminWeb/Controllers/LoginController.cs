@@ -53,7 +53,7 @@ namespace eShopSplution.AdminWeb.Controllers
 
             var token = await _userClientApi.Auth(command);
 
-            var userPrincipal = this.ValidateToken(token);
+            var userPrincipal = this.ValidateToken(token.Data);
 
             var authProperties = new AuthenticationProperties
             {
@@ -61,7 +61,7 @@ namespace eShopSplution.AdminWeb.Controllers
                 IsPersistent = false
             };
 
-            HttpContext.Session.SetString("Token", token);
+            HttpContext.Session.SetString("Token", token.Data);
             await HttpContext.SignInAsync(
                         CookieAuthenticationDefaults.AuthenticationScheme,
                         userPrincipal,

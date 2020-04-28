@@ -1,5 +1,6 @@
 ﻿using eShopSolution.Api.Application.Commands.Login.Create;
 using eShopSolution.Api.Application.Commands.Register.Create;
+using eShopSolution.Api.Application.Commands.User;
 using eShopSolution.Api.Application.Queries.Users;
 using eShopSolution.Application.User;
 using Microsoft.AspNetCore.Authorization;
@@ -40,9 +41,9 @@ namespace eShopSolution.Api.Controllers
                 return BadRequest(ModelState);
             }
             var resultToken = await _userService.Auth(command);
-            if (string.IsNullOrEmpty(resultToken))
+            if (string.IsNullOrEmpty(resultToken.Data))
             {
-                return BadRequest("user name or password is incorrect");
+                return BadRequest(resultToken);
             }
 
             return Ok(resultToken);
@@ -62,25 +63,47 @@ namespace eShopSolution.Api.Controllers
                 return BadRequest(ModelState);
             }
             var result = await _userService.Register(command);
-            if (!result)
+            if (!result.IsSuccessed)
             {
-                return BadRequest("Register is unsuccessful");
+                return BadRequest(result);
             }
 
-            return Ok();
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Cập nhật người dùng
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPut("users/update/{id}")]
+        public async Task<IActionResult> Update(Guid id, [FromBody]UpdateUserCommand command)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var result = await _userService.Update(id, command);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
         }
 
         /// <summary>
         /// Lấy thông tin người dùng qua id
         /// </summary>
-        /// <param name="query"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("users/profile")]
-        public async Task<IActionResult> GetProfile([FromForm]GetDetailUserDto query)
+        [HttpGet("users/profile/{id}")]
+        public async Task<IActionResult> GetProfile(Guid id)
         {
             try
             {
-                var user = await _userService.GetProfileUser(query);
+                var user = await _userService.GetProfileUser(id);
                 return this.Ok(user);
             }
             catch (Exception e)
@@ -109,5 +132,7 @@ namespace eShopSolution.Api.Controllers
                 throw e;
             }
         }
+
+
     }
 }

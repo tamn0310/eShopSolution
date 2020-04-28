@@ -3,6 +3,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -49,12 +50,14 @@ namespace eShopSplution.AdminWeb
             IMvcBuilder builder = services.AddRazorPages();
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
-            #if DEBUG
+#if DEBUG
             if (environment == Environments.Development)
             {
                 builder.AddRazorRuntimeCompilation();
             }
-            #endif
+#endif
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             //DI
             services.AddTransient<IUserClientApi, UserClientApi>();
