@@ -110,5 +110,12 @@ namespace eShopSplution.AdminWeb.Controllers
             ModelState.AddModelError("", result.Message);
             return View(command);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var result = await _userClientApi.GetProfile(id);
+            return View(result.Data);
+        }
     }
 }
