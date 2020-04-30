@@ -75,6 +75,24 @@ namespace eShopSolution.Application.User
         }
 
         /// <summary>
+        /// Xóa người dùng
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<ApiResult<bool>> Delete(Guid id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user == null)
+            {
+                return new ApiResultError<bool>("Người dùng không tồn tại.");
+            }
+            var result = await _userManager.DeleteAsync(user);
+            if (result.Succeeded)
+                return new ApiResultSuccess<bool>();
+            return new ApiResultError<bool>("Xóa không thành công");
+        }
+
+        /// <summary>
         /// Lấy ra tất cả người dùng phân trang theo param truyền vào
         /// </summary>
         /// <param name="request"></param>

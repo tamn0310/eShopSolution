@@ -70,6 +70,29 @@ namespace eShopSplution.AdminWeb.Services
         }
 
         /// <summary>
+        /// Call api xóa người dùng
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<ApiResult<bool>> Delete(Guid id)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(_configuration["BaseAddress"]);
+            var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
+
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
+
+            var json = JsonConvert.SerializeObject(id);
+
+            var response = await client.DeleteAsync($"/api/v1/users/{id}");
+            var result = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+                return JsonConvert.DeserializeObject<ApiResultSuccess<bool>>(result);
+
+            return JsonConvert.DeserializeObject<ApiResultError<bool>>(result);
+        }
+
+        /// <summary>
         /// Call api lấy chi tiết thông tin người dùng
         /// </summary>
         /// <param name="id"></param>
@@ -80,7 +103,7 @@ namespace eShopSplution.AdminWeb.Services
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new Uri(_configuration["BaseAddress"]);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
-            var response = await client.GetAsync($"/api/v1/users/profile/{id}");
+            var response = await client.GetAsync($"/api/v1/users/{id}");
             var body = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
                 return JsonConvert.DeserializeObject<ApiResultSuccess<GetDetailUserDto>>(body);
@@ -122,7 +145,7 @@ namespace eShopSplution.AdminWeb.Services
             var json = JsonConvert.SerializeObject(command);
             var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var response = await client.PutAsync("$/api/v1/users/update/{id}", httpContent);
+            var response = await client.PutAsync("$/api/v1/users/{id}", httpContent);
             var result = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
                 return JsonConvert.DeserializeObject<ApiResultSuccess<bool>>(result);

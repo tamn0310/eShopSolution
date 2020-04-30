@@ -117,5 +117,28 @@ namespace eShopSplution.AdminWeb.Controllers
             var result = await _userClientApi.GetProfile(id);
             return View(result.Data);
         }
+
+        [HttpGet]
+        public IActionResult Delete(Guid id)
+        {
+            return View(new DeleteUserCommand()
+            {
+                Id = id
+            });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(DeleteUserCommand command)
+        {
+            if (!ModelState.IsValid)
+                return View();
+
+            var result = await _userClientApi.Delete(command.Id);
+            if (result.IsSuccessed)
+                return RedirectToAction("Index");
+
+            ModelState.AddModelError("", result.Message);
+            return View(command);
+        }
     }
 }

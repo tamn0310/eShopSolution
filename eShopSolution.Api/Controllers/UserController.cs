@@ -77,7 +77,7 @@ namespace eShopSolution.Api.Controllers
         /// <param name="id"></param>
         /// <param name="command"></param>
         /// <returns></returns>
-        [HttpPut("users/update/{id}")]
+        [HttpPut("users/{id}")]
         public async Task<IActionResult> Update(Guid id, [FromBody]UpdateUserCommand command)
         {
             if (!ModelState.IsValid)
@@ -98,7 +98,7 @@ namespace eShopSolution.Api.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("users/profile/{id}")]
+        [HttpGet("users/{id}")]
         public async Task<IActionResult> GetProfile(Guid id)
         {
             try
@@ -133,6 +133,25 @@ namespace eShopSolution.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// Xóa người dùng theo id truyền vào
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("users/{id}")]
+        public async Task<IActionResult> Delete([FromRoute] Guid id)
+        {
+            try
+            {
+                var user = await _userService.Delete(id);
 
+                return Ok(user);
+            }
+            catch (Exception e)
+            {
+                this._logger.LogError(e.Message, e);
+                throw e;
+            }
+        }
     }
 }
