@@ -45,5 +45,12 @@ namespace eShopSplution.AdminWeb.Services
         /// <param name="id"></param>
         /// <returns></returns>
         Task<ApiResult<GetDetailUserDto>> GetProfile(Guid id);
+
+        /// <summary>
+        /// call api xóa người dùng
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<ApiResult<bool>> Delete(Guid id);
     }
 }

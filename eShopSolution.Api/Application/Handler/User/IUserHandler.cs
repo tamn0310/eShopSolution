@@ -45,5 +45,12 @@ namespace eShopSolution.Application.User
         /// <param name="command"></param>
         /// <returns></returns>
         Task<ApiResult<bool>> Update(Guid id, UpdateUserCommand command);
+
+        /// <summary>
+        /// Xóa người dùng
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<ApiResult<bool>> Delete(Guid id);
     }
 }
